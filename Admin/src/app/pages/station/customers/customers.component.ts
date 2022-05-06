@@ -22,7 +22,7 @@ export class CustomersComponent implements OnInit {
   currentpage: number;
   idDelete: string;
   comapnyItem: any;
-  public totalPage:number;
+  public totalPage: number;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -30,7 +30,7 @@ export class CustomersComponent implements OnInit {
     private stationService: StationService,
     private companyService: CompanyService,
     private toastService: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.breadCrumbItems = [
@@ -125,7 +125,7 @@ export class CustomersComponent implements OnInit {
 
   getPageStation(event): void {
     console.log(event);
-    this.currentpage =event;
+    this.currentpage = event;
     this.stationService.getStation(event).subscribe((data: any) => {
       this.customersData = data.stations;
     });
