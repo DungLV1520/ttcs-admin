@@ -9,8 +9,8 @@ export class CompanyService {
   constructor(private http: HttpClient) {
   }
 
-  getCompany() {
-    return this.http.get(`${this.SERVER_URL}/companies/all`);
+  getCompany(page?:number) {
+    return this.http.get(`${this.SERVER_URL}/companies/all?pageNumber=${page}`);
   }
 
 
@@ -23,8 +23,7 @@ export class CompanyService {
     return this.http.put(`${this.SERVER_URL}/companies/${id}`,companies);
   }
 
-
   deleteCompany(id:string) {
-    return this.http.get(`${this.SERVER_URL}/companies/${id}`);
+    return this.http.delete(`${this.SERVER_URL}/companies/${id}`);
   }
 }

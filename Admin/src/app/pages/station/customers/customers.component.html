@@ -72,7 +72,7 @@
                     <p class="mb-1">{{ customers.address }}</p>
                   </td>
                   <td>
-                    <p class="mb-1">{{ customers.company }}</p>
+                    <p class="mb-1">{{ customers?.company?.name }}</p>
                   </td>
                   <td>{{ customers.createdAt | date: "dd MMM, YYYY" }}</td>
                   <td>{{ customers.updatedAt | date: "dd MMM, YYYY" }}</td>
@@ -239,6 +239,6 @@
     >
       Cancel
     </button>
-    <button (click)="deleteStation()"type="button" class="btn btn-primary">OK</button>
+    <button (click)="deleteStation()" type="button" class="btn btn-primary">OK</button>
   </div>
 </ng-template>

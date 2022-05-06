@@ -44,7 +44,8 @@
                   <th>Description</th>
                   <th>Station</th>
                   <th>Vehicle</th>
-                  <th>Joining Date</th>
+                  <th>Received at</th>
+                  <th>Modified at</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -76,7 +77,8 @@
 
                   <td>{{ customers.station }}</td>
                   <td>{{ customers.vehicles }}</td>
-                  <td>{{ customers.date | date: "dd MMM, YYYY" }}</td>
+                  <td>{{ customers.createdAt | date: "dd MMM, YYYY" }}</td>
+                  <td>{{ customers.updatedAt | date: "dd MMM, YYYY" }}</td>
                   <td>
                     <div class="dropdown" ngbDropdown placement="bottom-right">
                       <a
@@ -94,7 +96,7 @@
                       >
                         <li>
                           <a
-                            (click)="openModal(content, true)"
+                            (click)="openModal(content, true, customers)"
                             class="dropdown-item"
                             ><i class="fas fa-pencil-alt text-success me-1"></i>
                             Edit</a
@@ -102,7 +104,9 @@
                         </li>
                         <li>
                           <a
-                            (click)="openModalDelete(contentdelete)"
+                            (click)="
+                              openModalDelete(contentdelete, customers._id)
+                            "
                             class="dropdown-item"
                             ><i class="fas fa-trash-alt text-danger me-1"></i>
                             Delete</a
@@ -117,8 +121,10 @@
           </div>
           <!-- pagination -->
           <ngb-pagination
-            [collectionSize]="50"
+            [collectionSize]="totalPage"
+            [pageSize]="10"
             [(page)]="currentpage"
+            (pageChange)="getPageCompany($event)"
             class="pagination pagination-rounded justify-content-end mb-2"
             aria-label="Default pagination"
           >
@@ -141,7 +147,7 @@
     ></button>
   </div>
   <div class="modal-body">
-    <form (ngSubmit)="saveCustomer()" [formGroup]="formData">
+    <form (ngSubmit)="saveCompany()" [formGroup]="formData">
       <div class="row">
         <div class="col-12">
           <div class="mb-3">
@@ -152,56 +158,76 @@
               type="text"
               name="title"
               autocomplete="off"
-              formControlName="companyName"
-              [ngClass]="{ 'is-invalid': submitted && form.companyName.errors }"
+              formControlName="name"
+              [ngClass]="{ 'is-invalid': submitted && form.name.errors }"
             />
-            <div
-              *ngIf="submitted && form.companyName.errors"
-              class="invalid-feedback"
-            >
-              <span *ngIf="form.companyName.errors.required"
+            <div *ngIf="submitted && form.name.errors" class="invalid-feedback">
+              <span *ngIf="form.name.errors.required"
                 >CompanyName is required.</span
               >
             </div>
           </div>
           <div class="mb-3">
-            <label class="control-label">Email</label>
+            <label class="control-label">Description</label>
             <input
               class="form-control"
-              placeholder="Enter email"
+              placeholder="Enter description"
               type="text"
-              name="email"
+              name="description"
               autocomplete="off"
-              formControlName="email"
-              [ngClass]="{ 'is-invalid': submitted && form.email.errors }"
+              formControlName="description"
+              [ngClass]="{ 'is-invalid': submitted && form.description.errors }"
             />
             <div
-              *ngIf="submitted && form.email.errors"
+              *ngIf="submitted && form.description.errors"
               class="invalid-feedback"
             >
-              <span *ngIf="form.email.errors.required">Email is required.</span>
-              <span *ngIf="form.email.errors.pattern"
-                >This value should be a valid email.</span
+              <span *ngIf="form.description.errors.required"
+                >Description is required.</span
               >
             </div>
           </div>
           <div class="mb-3">
-            <label class="control-label">Address</label>
-            <input
-              class="form-control"
-              placeholder="Enter address"
-              type="text"
-              autocomplete="off"
-              name="address"
-              formControlName="address"
-              [ngClass]="{ 'is-invalid': submitted && form.address.errors }"
-            />
+            <label class="control-label">Station</label>
+            <ng-select
+              placeholder="Enter station"
+              [items]="stationsData"
+              bindLabel="name"
+              bindValue="_id"
+              formControlName="station"
+              [ngClass]="{ 'is-invalid': submitted && form.station.errors }"
+            ></ng-select>
             <div
-              *ngIf="submitted && form.address.errors"
+              *ngIf="submitted && form.station.errors"
               class="invalid-feedback"
             >
-              <span *ngIf="form.address.errors.required"
-                >Address is required.</span
+              <span *ngIf="form.station.errors.required"
+                >Station is required.</span
+              >
+              <span *ngIf="form.station.errors.pattern"
+                >This value should be a valid station.</span
+              >
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="control-label">Vehicle</label>
+            <ng-select
+              placeholder="Enter vehicles"
+              [items]="vehicleData"
+              bindLabel="name"
+              bindValue="_id"
+              formControlName="vehicles"
+              [ngClass]="{ 'is-invalid': submitted && form.vehicles.errors }"
+            ></ng-select>
+            <div
+              *ngIf="submitted && form.vehicles.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.vehicles.errors.required"
+                >Vehicle is required.</span
+              >
+              <span *ngIf="form.vehicles.errors.pattern"
+                >This value should be a valid vehicle.</span
               >
             </div>
           </div>
@@ -235,6 +261,8 @@
     >
       Cancel
     </button>
-    <button type="button" class="btn btn-primary">OK</button>
+    <button (click)="deleteCompany()" type="button" class="btn btn-primary">
+      OK
+    </button>
   </div>
 </ng-template>
