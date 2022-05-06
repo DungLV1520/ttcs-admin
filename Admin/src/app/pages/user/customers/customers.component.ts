@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ToastrService } from "ngx-toastr";
+import { UserService } from "../user.service";
 
 import { Customers } from "./customers.model";
 
@@ -25,19 +27,22 @@ export class CustomersComponent implements OnInit {
   title!: string;
   // page
   currentpage: number;
-  selectValue: string[];
+  selectValue: boolean[];
+  totalPage: number;
+  idDelete: string
 
   constructor(
     private modalService: NgbModal,
-    private formBuilder: FormBuilder
-  ) {}
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+    private toastService: ToastrService
+  ) { }
 
   ngOnInit() {
     this.breadCrumbItems = [{ label: "User" }, { label: "List", active: true }];
-    this.selectValue = ['User', 'Admin', ]
+    this.selectValue = [true, false,]
     this.formData = this.formBuilder.group({
-      username: ["", [Validators.required]],
-      phone: ["", [Validators.required]],
+      name: ["", [Validators.required]],
       email: [
         "",
         [
@@ -45,8 +50,8 @@ export class CustomersComponent implements OnInit {
           Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$"),
         ],
       ],
-      address: ["", [Validators.required]],
-      balance: ["", [Validators.required]],
+      isAdmin: ["", [Validators.required]],
+      password: ["", [Validators.required]],
     });
 
     this.currentpage = 1;
@@ -61,50 +66,88 @@ export class CustomersComponent implements OnInit {
    * Customers data fetches
    */
   private _fetchData() {
-    this.customersData = customersData;
+    this.userService.getUser().subscribe((data: any) => {
+      this.customersData = data.users;
+      this.totalPage = data.count;
+      console.log(this.customersData);
+
+    });
   }
   get form() {
     return this.formData.controls;
   }
 
   saveCustomer() {
-    const currentDate = new Date();
-    if (this.formData.valid) {
-      const username = this.formData.get("username").value;
-      const email = this.formData.get("email").value;
-      const phone = this.formData.get("phone").value;
-      const address = this.formData.get("address").value;
-      const balance = this.formData.get("balance").value;
+    const id = this.formData.value._id;
+    console.log(id);
+    if (id !== undefined) {
+      this.updateUser(id);
+    } else {
+      this.creatUser();
+      console.log('aa');
 
-      this.customersData.push({
-        id: this.customersData.length + 1,
-        username,
-        email,
-        phone,
-        address,
-        balance,
-        rating: "4.3",
-        date: currentDate + ":",
-      });
-      this.modalService.dismissAll();
     }
     this.submitted = true;
   }
+  creatUser() {
+    console.log(this.formData.value);
+    this.formData.value.isAdmin = true;
+    if (this.formData.valid) {
+      this.userService.createUser(this.formData.value).subscribe(
+        (data) => {
+          this.toastService.success("Create station success!");
+          this._fetchData();
+          this.modalService.dismissAll();
+        },
+        (err) => {
+          this.toastService.error("Create station failed!");
+        }
+      );
+    }
+  }
 
+  updateUser(id: string) {
+    if (this.formData.valid) {
+      this.userService.updateUser(this.formData.value, id).subscribe(
+        (data) => {
+          this.toastService.success("Update station success!");
+          this._fetchData();
+          this.modalService.dismissAll();
+        },
+        (err) => {
+          this.toastService.error("Update station failed!");
+        }
+      );
+    }
+  }
   /**
    * Open modal
    * @param content modal content
    */
-  openModal(content: any, checkEdit) {
+
+  openModal(content?: any, checkEdit?: boolean, item?: any) {
+    console.log(item);
     this.title = !checkEdit ? "Add User" : "Update User";
     this.modalService.open(content);
+    if (checkEdit) {
+      this.formData.patchValue({
+        id: item._id,
+        name: item.name,
+        email: item.email,
+        isAdmin: item.isAdmin,
+        password: item.password,
+      });
+    } else {
+      this.formData.reset();
+    }
   }
 
   /**
    * Open modal
    * @param contentdelete modal content
    */
-  openModalDelete(contentdelete: any) {
+  openModalDelete(contentdelete: any, id: string) {
+    this.idDelete = id;
     this.modalService.open(contentdelete);
   }
 }
