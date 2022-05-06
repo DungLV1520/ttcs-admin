@@ -27,21 +27,31 @@ export class CustomersComponent implements OnInit {
   title!: string;
   // page
   currentpage: number;
-  selectValue: boolean[];
+  selectValue: any[];
   totalPage: number;
-  idDelete: string
+  idDelete: string;
 
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private userService: UserService,
     private toastService: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.breadCrumbItems = [{ label: "User" }, { label: "List", active: true }];
-    this.selectValue = [true, false,]
+    this.selectValue = [
+      {
+        check: false,
+        name: "User",
+      },
+      {
+        check: true,
+        name: "Admin",
+      },
+    ];
     this.formData = this.formBuilder.group({
+      id:[""],
       name: ["", [Validators.required]],
       email: [
         "",
@@ -56,39 +66,32 @@ export class CustomersComponent implements OnInit {
 
     this.currentpage = 1;
 
-    /**
-     * Fetches the data
-     */
     this._fetchData();
   }
 
-  /**
-   * Customers data fetches
-   */
   private _fetchData() {
     this.userService.getUser().subscribe((data: any) => {
       this.customersData = data.users;
       this.totalPage = data.count;
-      console.log(this.customersData);
-
     });
   }
+
   get form() {
     return this.formData.controls;
   }
 
   saveCustomer() {
-    const id = this.formData.value._id;
+    const id = this.formData.value.id;
     console.log(id);
     if (id !== undefined) {
       this.updateUser(id);
     } else {
       this.creatUser();
-      console.log('aa');
-
+      console.log("aa");
     }
     this.submitted = true;
   }
+
   creatUser() {
     console.log(this.formData.value);
     this.formData.value.isAdmin = true;
@@ -120,6 +123,30 @@ export class CustomersComponent implements OnInit {
       );
     }
   }
+
+  deleteTrip() {
+    console.log(this.idDelete);
+    this.userService.deleteUser(this.idDelete).subscribe(
+      (data) => {
+        this.toastService.success("Delete station success!");
+        this._fetchData();
+      },
+      (err) => {
+        this.toastService.error("Delete station failed!");
+      }
+    );
+    this.modalService.dismissAll();
+    this.submitted = true;
+  }
+
+  getPageUser(event): void {
+    console.log(event);
+    this.currentpage = event;
+    this.userService.getUser(event).subscribe((data: any) => {
+      this.customersData = data.users;
+    });
+  }
+
   /**
    * Open modal
    * @param content modal content

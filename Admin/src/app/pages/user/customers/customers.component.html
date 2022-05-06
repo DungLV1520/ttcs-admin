@@ -39,7 +39,7 @@
             <table class="table align-middle table-nowrap">
               <thead>
                 <tr>
-                  <th>Avatar</th>
+                  <th>#</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Role</th>
@@ -54,13 +54,7 @@
                   "
                 >
                   <td>
-                    <div>
-                      <img
-                        class="rounded-circle avatar-xs"
-                        src="assets/images/users/avatar-2.jpg"
-                        alt=""
-                      />
-                    </div>
+                    {{ i + 1 }}
                   </td>
                   <td>{{ customers.name }}</td>
                   <td>
@@ -68,7 +62,6 @@
                   </td>
 
                   <td>{{ customers.isAdmin }}</td>
-
                   <td style="text-align: center">
                     <div class="dropdown" ngbDropdown placement="bottom-right">
                       <a
@@ -111,8 +104,10 @@
           </div>
           <!-- pagination -->
           <ngb-pagination
-            [collectionSize]="50"
+            [collectionSize]="totalPage"
+            [pageSize]="10"
             [(page)]="currentpage"
+            (pageChange)="getPageUser($event)"
             class="pagination pagination-rounded justify-content-end mb-2"
             aria-label="Default pagination"
           >
@@ -178,7 +173,7 @@
             <label class="control-label">Password</label>
             <input
               class="form-control"
-              placeholder="Enter email"
+              placeholder="Enter password"
               type="text"
               name="password"
               autocomplete="off"
@@ -190,7 +185,7 @@
               class="invalid-feedback"
             >
               <span *ngIf="form.password.errors.required"
-                >Email is required.</span
+                >Password is required.</span
               >
             </div>
           </div>
@@ -199,13 +194,11 @@
             <label>Role</label>
             <ng-select
               [items]="selectValue"
-              bindValue=""
+              bindValue="check"
+              bindLabel="name"
               formControlName="isAdmin"
+              placeholder="Choose role"
             ></ng-select>
-          </div>
-          <div class="mb-3">
-            <label class="control-label">Avatar</label>
-            <input class="form-control" type="file" id="formFile" />
           </div>
         </div>
       </div>
@@ -238,6 +231,6 @@
     >
       Cancel
     </button>
-    <button type="button" class="btn btn-primary">OK</button>
+    <button (click)="deleteTrip()"type="button" class="btn btn-primary">OK</button>
   </div>
 </ng-template>

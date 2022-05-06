@@ -16,12 +16,8 @@ import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin
 import interactionPlugin from "@fullcalendar/interaction"; // a plugin
 import bootstrapPlugin from "@fullcalendar/bootstrap";
 import { LightboxModule } from "ngx-lightbox";
-
 import { UIModule } from "../shared/ui/ui.module";
-
 import { PagesRoutingModule } from "./pages-routing.module";
-
-import { DashboardsModule } from "./dashboards/dashboards.module";
 import { StationModule } from "./station/station.module";
 import { TripModule } from "./trip/trip.module";
 import { CryptoModule } from "./crypto/crypto.module";
@@ -55,7 +51,6 @@ FullCalendarModule.registerPlugins([
     PagesRoutingModule,
     NgApexchartsModule,
     ReactiveFormsModule,
-    DashboardsModule,
     CryptoModule,
     StationModule,
     HttpClientModule,

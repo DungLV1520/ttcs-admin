@@ -5,8 +5,10 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { VehicleService } from "../../vehicle/vehicle.service";
 import { TripService } from "../trip.service";
 import { Customers } from "./customers.model";
-// import { customersData } from "./data";
 import { province } from "./trips";
+import { ToastrService } from "ngx-toastr";
+import * as moment from "moment";
+import { from } from "rxjs";
 
 @Component({
   selector: "app-customer-trip",
@@ -23,7 +25,6 @@ export class CustomerTripComponent implements OnInit {
   currentpage: number;
   title: string;
   public totalPage: number;
-  toastService: any;
   stationService: any;
   idDelete: string;
   customerDataVehicle: any;
@@ -34,13 +35,15 @@ export class CustomerTripComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private tripService: TripService,
-    private vehicleService: VehicleService
-  ) { }
+    private vehicleService: VehicleService,
+    private toastService: ToastrService
+  ) {}
 
   ngOnInit() {
     this.breadCrumbItems = [{ label: "Trip" }, { label: "List", active: true }];
 
     this.formData = this.formBuilder.group({
+      id: [""],
       from: ["", [Validators.required]],
       to: ["", [Validators.required]],
       guestCapacity: ["", Validators.required],
@@ -63,7 +66,6 @@ export class CustomerTripComponent implements OnInit {
       this.customersData = data.trips;
       this.totalPage = data.count;
       console.log(this.customersData);
-
     });
   }
 
@@ -71,53 +73,47 @@ export class CustomerTripComponent implements OnInit {
     this.vehicleService.getVehicle().subscribe((data: any) => {
       this.customerDataVehicle = data.vehicles;
       console.log(this.customerDataVehicle);
-
     });
   }
-  guestCapacity(event: any) {
-    console.log(event, 'alo');
+  guestCapacity(event?: any) {
     this._number = event.guestCapacity;
     this.formData.patchValue({
-      guestCapacity: this._number
-    })
+      guestCapacity: this._number,
+    });
   }
   get form() {
     return this.formData.controls;
   }
 
   getPageTrip(event): void {
-    console.log(event);
     this.currentpage = event;
     this.tripService.getTrip(event).subscribe((data: any) => {
       this.customersData = data.trips;
-
     });
   }
+
   saveCustomer() {
-    const id = this.formData.value._id;
+    const id = this.formData.value.id;
     console.log(id);
+
     if (id !== undefined) {
       this.updateTrip(id);
     } else {
       this.creatTrip();
-      console.log('aa');
-
     }
     this.submitted = true;
   }
+
   creatTrip() {
-    console.log(this.formData.value);
-
     if (this.formData.valid) {
-
-      this.tripService.creatTrip(this.formData.value).subscribe(
+      this.tripService.creatTrip(this.formData?.value).subscribe(
         (data) => {
-          this.toastService.success("Create station success!");
+          this.toastService.success("Create trip success!");
           this._fetchData();
           this.modalService.dismissAll();
         },
         (err) => {
-          this.toastService.error("Create station failed!");
+          this.toastService.error("Create trip failed!");
         }
       );
     }
@@ -127,15 +123,29 @@ export class CustomerTripComponent implements OnInit {
     if (this.formData.valid) {
       this.tripService.updateTrip(this.formData.value, id).subscribe(
         (data) => {
-          this.toastService.success("Update station success!");
+          this.toastService.success("Update trip success!");
           this._fetchData();
           this.modalService.dismissAll();
         },
         (err) => {
-          this.toastService.error("Update station failed!");
+          this.toastService.error("Update trip failed!");
         }
       );
     }
+  }
+
+  deleteTrip() {
+    this.tripService.deleteTrip(this.idDelete).subscribe(
+      (data) => {
+        this.toastService.success("Delete trip success!");
+        this._fetchData();
+      },
+      (err) => {
+        this.toastService.error("Delete trip failed!");
+      }
+    );
+    this.modalService.dismissAll();
+    this.submitted = true;
   }
 
   /**
@@ -152,8 +162,8 @@ export class CustomerTripComponent implements OnInit {
         from: item.from,
         to: item.to,
         guestCapacity: item.guestCapacity,
-        vehicle: item.vehicle,
-        startTime: item.startTime,
+        vehicle: item.vehicle?._id,
+        startTime: moment(item.startTime).format(),
         price: item.price,
       });
     } else {
@@ -170,8 +180,29 @@ export class CustomerTripComponent implements OnInit {
     this.modalService.open(contentdelete);
   }
 
-
   navigateStation(): void {
     this.router.navigateByUrl("ecommerce/product-detail/1");
+  }
+
+  getProvince(from: any) {
+    let id = 0;
+    for (let i = 0; i < this.provinceData.length; i++) {
+      if (this.provinceData[i].idProvince === from) {
+        id = this.provinceData[i].name;
+        break;
+      }
+    }
+    return id;
+  }
+
+  getToProvince(to: any) {
+    let id = 0;
+    for (let i = 0; i < this.provinceData.length; i++) {
+      if (this.provinceData[i].idProvince === to) {
+        id = this.provinceData[i].name;
+        break;
+      }
+    }
+    return id;
   }
 }

@@ -66,9 +66,9 @@
                       >
                     </div>
                   </td>
-                  <td>{{ customers.from }}</td>
+                  <td>{{ getProvince(customers.from) }}</td>
                   <td>
-                    <p class="mb-1">{{ customers.to }}</p>
+                    <p class="mb-1">{{ getToProvince(customers.to) }}</p>
                   </td>
                   <td>{{ customers.startTime | date: "dd MMM, YYYY" }}</td>
                   <td>{{ customers.price }}</td>
@@ -114,8 +114,10 @@
           </div>
           <!-- pagination -->
           <ngb-pagination
-            [collectionSize]="50"
+            [collectionSize]="totalPage"
+            [pageSize]="10"
             [(page)]="currentpage"
+            (pageChange)="getPageTrip($event)"
             class="pagination pagination-rounded justify-content-end mb-2"
             aria-label="Default pagination"
           >
@@ -140,12 +142,10 @@
   </div>
   <div class="modal-body">
     <form (ngSubmit)="saveCustomer()" [formGroup]="formData">
-      <!-- <form [formGroup]="formData"> -->
       <div class="row">
         <div class="col-12">
           <div class="mb-3">
             <label class="control-label">From</label>
-
             <ng-select
               placeholder="Enter company"
               [items]="provinceData"
@@ -155,7 +155,9 @@
               [ngClass]="{ 'is-invalid': submitted && form.from.errors }"
             ></ng-select>
             <div *ngIf="submitted && form.from.errors" class="invalid-feedback">
-              <span *ngIf="form.from.errors.required">From is required.</span>
+              <span *ngIf="form.from.errors.required"
+                >From Station is required.</span
+              >
             </div>
           </div>
           <div class="mb-3">
@@ -170,7 +172,9 @@
               [ngClass]="{ 'is-invalid': submitted && form.to.errors }"
             ></ng-select>
             <div *ngIf="submitted && form.to.errors" class="invalid-feedback">
-              <span *ngIf="form.to.errors.required">To is required.</span>
+              <span *ngIf="form.to.errors.required"
+                >To Station is required.</span
+              >
             </div>
           </div>
 
@@ -212,7 +216,7 @@
               class="invalid-feedback"
             >
               <span *ngIf="form.vehicle.errors.required"
-                >Company is required.</span
+                >Vehicle is required.</span
               >
             </div>
           </div>
@@ -253,7 +257,7 @@
               class="invalid-feedback"
             >
               <span *ngIf="form.guestCapacity.errors.required"
-                >Price is required.</span
+                >Guest Capacity is required.</span
               >
             </div>
           </div>
@@ -288,6 +292,6 @@
     >
       CANCEL
     </button>
-    <button type="button" class="btn btn-primary">OK</button>
+    <button (click)="deleteTrip()"type="button" class="btn btn-primary">OK</button>
   </div>
 </ng-template>

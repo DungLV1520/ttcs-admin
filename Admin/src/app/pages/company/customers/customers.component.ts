@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { CompanyService } from "../company.service";
 import { Customers } from "./customers.model";
-import { customersData } from "./data";
 import { ToastrService } from "ngx-toastr";
 import { StationService } from "../../station/station.service";
 import { VehicleService } from "../../vehicle/vehicle.service";
@@ -24,8 +23,8 @@ export class CustomersComponent implements OnInit {
   currentpage: number;
   totalPage: number;
   idDelete: string;
-  stationsData:any;
-  vehicleData:any;
+  stationsData: any;
+  vehicleData: any;
 
   constructor(
     private modalService: NgbModal,
@@ -34,7 +33,7 @@ export class CustomersComponent implements OnInit {
     private companyService: CompanyService,
     private toastService: ToastrService,
     private stationService: StationService,
-    private vehicleService: VehicleService,
+    private vehicleService: VehicleService
   ) {}
 
   ngOnInit() {
@@ -44,9 +43,10 @@ export class CustomersComponent implements OnInit {
     ];
 
     this.formData = this.formBuilder.group({
+      id:[""],
       name: ["", [Validators.required]],
       station: ["", [Validators.required]],
-      vehicles: ["",],
+      vehicles: [""],
       description: ["", [Validators.required]],
     });
 
@@ -80,7 +80,6 @@ export class CustomersComponent implements OnInit {
   }
 
   getPageCompany(event): void {
-    console.log(event);
     this.currentpage = event;
     this.companyService.getCompany(event).subscribe((data: any) => {
       this.customersData = data.companies;
@@ -88,8 +87,7 @@ export class CustomersComponent implements OnInit {
   }
 
   saveCompany() {
-    const id = this.formData.value._id;
-    console.log(id);
+    const id = this.formData.value.id;
     if (id !== undefined) {
       this.updateCompany(id);
     } else {
@@ -147,6 +145,7 @@ export class CustomersComponent implements OnInit {
    * @param content modal content
    */
   openModal(content: any, checkEdit, item?: any) {
+    console.log(item);
     this.title = !checkEdit ? "Add company" : "Update company";
     this.modalService.open(content);
     if (checkEdit) {

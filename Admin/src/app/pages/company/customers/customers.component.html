@@ -75,8 +75,10 @@
                     <p class="mb-1">{{ customers.description }}</p>
                   </td>
 
-                  <td>{{ customers.station }}</td>
-                  <td>{{ customers.vehicles }}</td>
+                  <td>{{ customers.station?.name }}</td>
+                  <td *ngFor="let item of customers.vehicles">
+                    <p class="mb-1">{{ item.name }}</p>
+                  </td>
                   <td>{{ customers.createdAt | date: "dd MMM, YYYY" }}</td>
                   <td>{{ customers.updatedAt | date: "dd MMM, YYYY" }}</td>
                   <td>
