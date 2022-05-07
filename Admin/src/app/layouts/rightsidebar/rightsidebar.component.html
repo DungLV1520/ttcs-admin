@@ -10,62 +10,7 @@
       >
         <i class="mdi mdi-close noti-icon"></i>
       </a>
-      <h5 class="m-0">Settings</h5>
 
-      <h6 class="mt-4 mb-3">Layout</h6>
-      <hr />
-
-      <div class="form-check form-switch">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="is-layout"
-          (click)="changeLayout($event)"
-        />
-        <label class="form-check-label" for="is-layout">{{
-          attribute == "vertical" ? "vertical" : "horizontal"
-        }}</label>
-      </div>
-      <h6 class="mt-4 mb-3">Width</h6>
-      <hr />
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="layout-width"
-          id="layout-width-fuild"
-          value="fluid"
-          [checked]="width === 'fluid'"
-          (change)="changeWidth('fluid')"
-        />
-        <label class="form-check-label" for="layout-width-fuild">Fluid</label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="layout-width"
-          id="layout-width-boxed"
-          value="boxed"
-          [checked]="width === 'boxed'"
-          (change)="changeWidth('boxed')"
-        />
-        <label class="form-check-label" for="layout-width-boxed">Boxed</label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="layout-width"
-          id="layout-width-scrollable"
-          value="scrollable"
-          [checked]="width === 'scrollable'"
-          (change)="changeWidth('scrollable')"
-        />
-        <label class="form-check-label" for="layout-width-scrollable"
-          >Scrolable</label
-        >
-      </div>
       <div *ngIf="attribute == 'vertical'">
         <h6 class="mt-4 mb-3">Sidebar Color</h6>
         <hr />

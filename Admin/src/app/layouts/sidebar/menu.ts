@@ -64,145 +64,26 @@ export const MENU: MenuItem[] = [
     },
     subItems: [
       {
-        id: 58,
-        label: "MENUITEMS.AUTHENTICATION.LIST.LOGIN",
-        link: "/account/login",
-        parentId: 57,
-      },
-      {
-        id: 59,
-        label: "MENUITEMS.AUTHENTICATION.LIST.LOGIN2",
-        link: "/account/login-2",
-        parentId: 57,
-      },
-      {
-        id: 60,
-        label: "MENUITEMS.AUTHENTICATION.LIST.REGISTER",
-        link: "/account/signup",
-        parentId: 57,
-      },
-      {
-        id: 61,
-        label: "MENUITEMS.AUTHENTICATION.LIST.REGISTER2",
-        link: "/account/signup-2",
-        parentId: 57,
-      },
-      {
-        id: 62,
-        label: "MENUITEMS.AUTHENTICATION.LIST.RECOVERPWD",
-        link: "/account/reset-password",
-        parentId: 57,
-      },
-      {
-        id: 63,
-        label: "MENUITEMS.AUTHENTICATION.LIST.RECOVERPWD2",
-        link: "/account/recoverpwd-2",
-        parentId: 57,
-      },
-      {
         id: 64,
         label: "MENUITEMS.AUTHENTICATION.LIST.LOCKSCREEN",
         link: "/pages/lock-screen-1",
         parentId: 57,
       },
-      {
-        id: 65,
-        label: "MENUITEMS.AUTHENTICATION.LIST.LOCKSCREEN2",
-        link: "/pages/lock-screen-2",
-        parentId: 57,
-      },
+
       {
         id: 66,
         label: "MENUITEMS.AUTHENTICATION.LIST.CONFIRMMAIL",
         link: "/pages/confirm-mail",
         parentId: 57,
       },
-      {
-        id: 67,
-        label: "MENUITEMS.AUTHENTICATION.LIST.CONFIRMMAIL2",
-        link: "/pages/confirm-mail-2",
-        parentId: 57,
-      },
-      {
-        id: 68,
-        label: "MENUITEMS.AUTHENTICATION.LIST.EMAILVERIFICATION",
-        link: "/pages/email-verification",
-        parentId: 57,
-      },
-      {
-        id: 69,
-        label: "MENUITEMS.AUTHENTICATION.LIST.EMAILVERIFICATION2",
-        link: "/pages/email-verification-2",
-        parentId: 57,
-      },
-      {
-        id: 70,
-        label: "MENUITEMS.AUTHENTICATION.LIST.TWOSTEPVERIFICATION",
-        link: "/pages/two-step-verification",
-        parentId: 57,
-      },
-      {
-        id: 71,
-        label: "MENUITEMS.AUTHENTICATION.LIST.TWOSTEPVERIFICATION2",
-        link: "/pages/two-step-verification-2",
-        parentId: 57,
-      },
+
     ],
   },
   {
     id: 72,
     label: "MENUITEMS.UTILITY.TEXT",
     icon: "bx-file",
-    subItems: [
-      {
-        id: 73,
-        label: "MENUITEMS.UTILITY.LIST.STARTER",
-        link: "/pages/starter",
-        parentId: 72,
-      },
-      {
-        id: 74,
-        label: "MENUITEMS.UTILITY.LIST.MAINTENANCE",
-        link: "/pages/maintenance",
-        parentId: 72,
-      },
-      {
-        id: 74,
-        label: "Coming Soon",
-        link: "/pages/coming-soon",
-        parentId: 72,
-      },
-      {
-        id: 75,
-        label: "MENUITEMS.UTILITY.LIST.TIMELINE",
-        link: "/pages/timeline",
-        parentId: 72,
-      },
-      {
-        id: 76,
-        label: "MENUITEMS.UTILITY.LIST.FAQS",
-        link: "/pages/faqs",
-        parentId: 72,
-      },
-      {
-        id: 77,
-        label: "MENUITEMS.UTILITY.LIST.PRICING",
-        link: "/pages/pricing",
-        parentId: 72,
-      },
-      {
-        id: 78,
-        label: "MENUITEMS.UTILITY.LIST.ERROR404",
-        link: "/pages/404",
-        parentId: 72,
-      },
-      {
-        id: 79,
-        label: "MENUITEMS.UTILITY.LIST.ERROR500",
-        link: "/pages/500",
-        parentId: 72,
-      },
-    ],
+    link: "/pages/timeline",
   },
   {
     id: 80,

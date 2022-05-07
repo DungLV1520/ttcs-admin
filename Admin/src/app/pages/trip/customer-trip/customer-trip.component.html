@@ -79,7 +79,7 @@
                     <p class="mb-1">{{ getToProvince(customers.to) }}</p>
                   </td>
                   <td>{{ customers.startTime | date: "dd MMM, YYYY" }}</td>
-                  <td>{{ customers.price }}</td>
+                  <td>{{ customers.price |currency:'':'':'1.2-2' }}</td>
                   <td style="text-align: center">
                     <div class="dropdown" ngbDropdown placement="bottom-right">
                       <a
