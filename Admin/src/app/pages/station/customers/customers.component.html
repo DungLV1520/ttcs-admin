@@ -1,4 +1,12 @@
-<div class="container-fluid">
+<div class="container-fluid" style="position: relative">
+  <div
+    class="spinner-border text-info m-1"
+    role="status"
+    *ngIf="loading"
+    style="position: absolute; top: -3%; left: 7%"
+  >
+    <span class="sr-only">Loading...</span>
+  </div>
   <app-page-title
     title="Station"
     [breadcrumbItems]="breadCrumbItems"

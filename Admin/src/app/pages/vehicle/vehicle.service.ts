@@ -12,17 +12,19 @@ export class VehicleService {
     return this.http.get(`${this.SERVER_URL}/vehicles/all?pageNumber=${page}`);
   }
 
+  getVehicleSeatID(id?:string) {
+    return this.http.get(`${this.SERVER_URL}/seats/${id}`);
+  }
 
-  // creatStation(stations:Customers) {
-  //   return this.http.post(`${this.SERVER_URL}/stations`,stations);
-  // }
+  creatVehicle(stations:any) {
+    return this.http.post(`${this.SERVER_URL}/vehicles`,stations);
+  }
 
+  updateVehicle(stations:any,id:string) {
+    return this.http.put(`${this.SERVER_URL}/vehicles/${id}`,stations);
+  }
 
-  // updateStation(stations:Customers,id:string) {
-  //   return this.http.put(`${this.SERVER_URL}/stations/${id}`,stations);
-  // }
-
-  // deleteStation(id:string) {
-  //   return this.http.delete(`${this.SERVER_URL}/stations/${id}`);
-  // }
+  deleteVehicle(id:string) {
+    return this.http.delete(`${this.SERVER_URL}/vehicles/${id}`);
+  }
 }

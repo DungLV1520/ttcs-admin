@@ -2,7 +2,7 @@ import { Injectable, PipeTransform } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, delay, switchMap, tap } from 'rxjs/operators';
-import { Table, SearchResult } from './advanced.model';
+import { Vehicle, SearchResult } from './advanced.model';
 import { tableData } from './data';
 import { SortDirection } from './advanced-sortable.directive';
 
@@ -25,7 +25,7 @@ const compare = (v1: string, v2: string) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
  * @param column Fetch the column
  * @param direction Sort direction Ascending or Descending
  */
-function sort(tables: Table[], column: string, direction: string): Table[] {
+function sort(tables: Vehicle[], column: string, direction: string): Vehicle[] {
     if (direction === '' || column === '') {
         return tables;
     } else {
@@ -41,7 +41,7 @@ function sort(tables: Table[], column: string, direction: string): Table[] {
  * @param tables Table field value fetch
  * @param term Search the value
  */
-function matches(tables: Table, term: string, pipe: PipeTransform) {
+function matches(tables: Vehicle, term: string, pipe: PipeTransform) {
     return tables.name.toLowerCase().includes(term.toLowerCase())
         || tables.position.toLowerCase().includes(term)
         || tables.office.toLowerCase().includes(term)
@@ -60,7 +60,7 @@ export class AdvancedService {
     // tslint:disable-next-line: variable-name
     private _search$ = new Subject<void>();
     // tslint:disable-next-line: variable-name
-    private _tables$ = new BehaviorSubject<Table[]>([]);
+    private _tables$ = new BehaviorSubject<Vehicle[]>([]);
     // tslint:disable-next-line: variable-name
     private _total$ = new BehaviorSubject<number>(0);
     // tslint:disable-next-line: variable-name

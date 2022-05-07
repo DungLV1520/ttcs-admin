@@ -8,7 +8,6 @@ import { Customers } from "./customers.model";
 import { province } from "./trips";
 import { ToastrService } from "ngx-toastr";
 import * as moment from "moment";
-import { from } from "rxjs";
 
 @Component({
   selector: "app-customer-trip",
@@ -29,6 +28,7 @@ export class CustomerTripComponent implements OnInit {
   idDelete: string;
   customerDataVehicle: any;
   _number: number;
+  loading: boolean = true;
 
   constructor(
     private modalService: NgbModal,
@@ -65,7 +65,7 @@ export class CustomerTripComponent implements OnInit {
     this.tripService.getTrip().subscribe((data: any) => {
       this.customersData = data.trips;
       this.totalPage = data.count;
-      console.log(this.customersData);
+      this.loading = false;
     });
   }
 
@@ -75,6 +75,7 @@ export class CustomerTripComponent implements OnInit {
       console.log(this.customerDataVehicle);
     });
   }
+
   guestCapacity(event?: any) {
     this._number = event.guestCapacity;
     this.formData.patchValue({
@@ -86,9 +87,11 @@ export class CustomerTripComponent implements OnInit {
   }
 
   getPageTrip(event): void {
+    this.loading = true;
     this.currentpage = event;
     this.tripService.getTrip(event).subscribe((data: any) => {
       this.customersData = data.trips;
+      this.loading = false;
     });
   }
 

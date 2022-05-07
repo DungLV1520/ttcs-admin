@@ -25,7 +25,7 @@ export class CustomersComponent implements OnInit {
   idDelete: string;
   stationsData: any;
   vehicleData: any;
-
+  loading: boolean = true;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -43,7 +43,7 @@ export class CustomersComponent implements OnInit {
     ];
 
     this.formData = this.formBuilder.group({
-      id:[""],
+      id: [""],
       name: ["", [Validators.required]],
       station: ["", [Validators.required]],
       vehicles: [""],
@@ -60,6 +60,7 @@ export class CustomersComponent implements OnInit {
     this.companyService.getCompany().subscribe((data: any) => {
       this.customersData = data.companies;
       this.totalPage = data.count;
+      this.loading=false;
     });
   }
 
@@ -80,9 +81,11 @@ export class CustomersComponent implements OnInit {
   }
 
   getPageCompany(event): void {
+    this.loading =true;
     this.currentpage = event;
     this.companyService.getCompany(event).subscribe((data: any) => {
       this.customersData = data.companies;
+      this.loading = false;
     });
   }
 

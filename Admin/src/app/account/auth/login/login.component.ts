@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   submitted = false;
   error = "";
   returnUrl: string;
+  loading:boolean = false;
 
   // set the currenr year
   year: number = new Date().getFullYear();
@@ -47,6 +48,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    this.loading=true;
     if (this.loginForm.invalid) {
       return;
     } else {
@@ -55,11 +57,12 @@ export class LoginComponent implements OnInit {
         .pipe(first())
         .subscribe(
           (data) => {
-            this.toastr.success('Login Success');
-            this.router.navigate(["/dashboard"]);
+            this.router.navigate(["/ecommerce/customers"]);
+            this.loading =false;
           },
           (error) => {
             this.error = error ? error : "";
+            this.loading =false;
           }
         );
     }

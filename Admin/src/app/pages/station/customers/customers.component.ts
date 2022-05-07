@@ -22,6 +22,7 @@ export class CustomersComponent implements OnInit {
   currentpage: number;
   idDelete: string;
   comapnyItem: any;
+  loading:boolean = true;
   public totalPage: number;
   constructor(
     private modalService: NgbModal,
@@ -60,6 +61,7 @@ export class CustomersComponent implements OnInit {
     this.stationService.getStation().subscribe((data: any) => {
       this.customersData = data.stations;
       this.totalPage = data.count;
+      this.loading =false;
     });
   }
 
@@ -124,10 +126,11 @@ export class CustomersComponent implements OnInit {
   }
 
   getPageStation(event): void {
-    console.log(event);
+    this.loading =true;
     this.currentpage = event;
     this.stationService.getStation(event).subscribe((data: any) => {
       this.customersData = data.stations;
+      this.loading =false;
     });
   }
 

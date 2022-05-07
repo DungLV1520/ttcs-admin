@@ -35,6 +35,7 @@ export class SweetalertComponent implements OnInit {
   position() {
     Swal.fire({
       position: 'top-end',
+      width:'300px',
       icon: 'success',
       title: 'Your work has been saved',
       showConfirmButton: false,
@@ -190,7 +191,7 @@ export class SweetalertComponent implements OnInit {
       });
     });
   }
- 
+
   async dynamicQueue() {
     const ipAPI = '//api.ipify.org?format=json'
     const inputValue = fetch(ipAPI)

@@ -13,24 +13,18 @@ import { customersData } from "./data";
   templateUrl: "./customers.component.html",
   styleUrls: ["./customers.component.scss"],
 })
-
-/**
- * Ecomerce Customers component
- */
 export class CustomersComponent implements OnInit {
-  // bread crumb items
   breadCrumbItems: Array<{}>;
   formData: FormGroup;
   submitted = false;
   customersData: Customers[];
   term: any;
   title!: string;
-  // page
   currentpage: number;
   selectValue: any[];
   totalPage: number;
   idDelete: string;
-
+  loading: boolean = true;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -51,7 +45,7 @@ export class CustomersComponent implements OnInit {
       },
     ];
     this.formData = this.formBuilder.group({
-      id:[""],
+      id: [""],
       name: ["", [Validators.required]],
       email: [
         "",
@@ -65,7 +59,6 @@ export class CustomersComponent implements OnInit {
     });
 
     this.currentpage = 1;
-
     this._fetchData();
   }
 
@@ -73,6 +66,7 @@ export class CustomersComponent implements OnInit {
     this.userService.getUser().subscribe((data: any) => {
       this.customersData = data.users;
       this.totalPage = data.count;
+      this.loading = false;
     });
   }
 
@@ -82,12 +76,10 @@ export class CustomersComponent implements OnInit {
 
   saveCustomer() {
     const id = this.formData.value.id;
-    console.log(id);
     if (id !== undefined) {
       this.updateUser(id);
     } else {
       this.creatUser();
-      console.log("aa");
     }
     this.submitted = true;
   }
@@ -140,10 +132,11 @@ export class CustomersComponent implements OnInit {
   }
 
   getPageUser(event): void {
-    console.log(event);
+    this.loading = true;
     this.currentpage = event;
     this.userService.getUser(event).subscribe((data: any) => {
       this.customersData = data.users;
+      this.loading = false;
     });
   }
 

@@ -1,5 +1,5 @@
 // Table data
-export interface Table {
+export interface Vehicle {
     name: string;
     position: string;
     office: string;
@@ -10,6 +10,6 @@ export interface Table {
 
 // Search Data
 export interface SearchResult {
-    tables: Table[];
+    tables: Vehicle[];
     total: number;
 }

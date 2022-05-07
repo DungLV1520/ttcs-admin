@@ -1,4 +1,12 @@
-<div class="container-fluid">
+<div class="container-fluid" style="position:relative;">
+  <div
+    class="spinner-border text-info m-1"
+    role="status"
+    *ngIf="loading"
+    style="position: absolute; top: -3%; left: 8%"
+  >
+    <span class="sr-only">Loading...</span>
+  </div>
   <app-page-title
     title="Vehicle"
     [breadcrumbItems]="breadCrumbItems"
@@ -58,17 +66,18 @@
                   <th></th>
                   <th sortable="name" (sort)="onSort($event)">Name</th>
                   <th sortable="office" (sort)="onSort($event)">Company</th>
-                  <th sortable="office" (sort)="onSort($event)">Total Seat</th>
                   <th sortable="age" (sort)="onSort($event)">Seat Capacity</th>
                   <th sortable="date" (sort)="onSort($event)">Received at</th>
                   <th sortable="salary" (sort)="onSort($event)">Modified at</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody *ngFor="let table of tables$ | async; let i = index">
+              <tbody *ngFor="let table of tableData; let i = index">
                 <tr>
                   <td align="center">
-                    <a class="expand-row" (click)="changeValue(i)"> + </a>
+                    <a class="expand-row" (click)="changeValue(i, table._id)">
+                      +
+                    </a>
                   </td>
                   <td>
                     <ngb-highlight
@@ -78,31 +87,25 @@
                   </td>
                   <td>
                     <ngb-highlight
-                      [result]="table.position"
+                      [result]="table.company?.name"
                       [term]="service.searchTerm"
                     ></ngb-highlight>
                   </td>
                   <td>
                     <ngb-highlight
-                      [result]="table.age"
+                      [result]="table.guestCapacity"
                       [term]="service.searchTerm"
                     ></ngb-highlight>
                   </td>
                   <td>
                     <ngb-highlight
-                      [result]="table.age"
+                      [result]="table.createdAt | date: 'dd MMM, YYYY'"
                       [term]="service.searchTerm"
                     ></ngb-highlight>
                   </td>
                   <td>
                     <ngb-highlight
-                      [result]="table.date"
-                      [term]="service.searchTerm"
-                    ></ngb-highlight>
-                  </td>
-                  <td>
-                    <ngb-highlight
-                      [result]="table.date"
+                      [result]="table.updatedAt | date: 'dd MMM, YYYY'"
                       [term]="service.searchTerm"
                     ></ngb-highlight>
                   </td>
@@ -124,7 +127,9 @@
                         <a class="dropdown-item" href="javascript: void(0);"
                           ><i class="mdi mdi-account-edit"></i>Edit</a
                         >
-                        <a class="dropdown-item" (click)="openModalDelete(contentdelete)"
+                        <a
+                          class="dropdown-item"
+                          (click)="openModalDelete(contentdelete)"
                           ><i class="mdi mdi-delete"></i>Delete</a
                         >
                       </div>
@@ -132,7 +137,7 @@
                   </td>
                 </tr>
 
-                <tr *ngIf="!hideme[i]" class="sub-table no-bg">
+                <tr *ngIf="hideme[i]" class="sub-table no-bg">
                   <td align="center"></td>
                   <td colspan="15" class="p-0">
                     <table class="table mb-0 table-striped">
@@ -140,18 +145,18 @@
                         <tr>
                           <th>Name Seat</th>
                           <th>Type</th>
+                          <th>Status</th>
                           <th>Created Date</th>
-                          <th>Last Modified </th>
+                          <th>Last Modified</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr
-                          *ngFor="let table of tables$ | async; let i = index"
-                        >
-                          <td>{{ table.name }}</td>
-                          <td>{{ table.name }}</td>
-                          <td>{{ table.name }}</td>
-                          <td>{{ table.name }}</td>
+                        <tr *ngFor="let table of editableTable; let i = index">
+                          <td>{{ table.sku }}</td>
+                          <td>{{ table.type }}</td>
+                          <td>{{ table.status ?"Booked":"Empty"}}</td>
+                          <td>{{ table.createdAt | date: "dd MMM, YYYY" }}</td>
+                          <td>{{ table.updatedAt | date: "dd MMM, YYYY" }}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -180,9 +185,11 @@
             <div class="col-sm-12 col-md-5">
               <div class="text-md-right float-md-end pagination-rounded">
                 <ngb-pagination
-                  [collectionSize]="total$ | async"
-                  [(page)]="service.page"
-                  [pageSize]="service.pageSize"
+                  [collectionSize]="totalPage"
+                  [(page)]="currentpage"
+                  [pageSize]="10"
+                  (pageChange)="getPageVehicle($event)"
+
                 >
                 </ngb-pagination>
               </div>

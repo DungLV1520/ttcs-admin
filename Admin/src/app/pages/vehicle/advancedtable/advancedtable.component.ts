@@ -1,105 +1,83 @@
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
-
-import { Observable } from 'rxjs';
-
-import { Table } from './advanced.model';
-
-import { tableData, editableTable } from './data';
-
-import { AdvancedService } from './advanced.service';
-import { AdvancedSortableDirective, SortEvent } from './advanced-sortable.directive';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, ViewChildren, QueryList } from "@angular/core";
+import { DecimalPipe } from "@angular/common";
+import { Observable } from "rxjs";
+import { Vehicle } from "./advanced.model";
+import { AdvancedService } from "./advanced.service";
+import {
+  AdvancedSortableDirective,
+  SortEvent,
+} from "./advanced-sortable.directive";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { VehicleService } from "../vehicle.service";
 
 @Component({
-  selector: 'app-advancedtable',
-  templateUrl: './advancedtable.component.html',
-  styleUrls: ['./advancedtable.component.scss'],
-  providers: [AdvancedService, DecimalPipe]
+  selector: "app-advancedtable",
+  templateUrl: "./advancedtable.component.html",
+  styleUrls: ["./advancedtable.component.scss"],
+  providers: [AdvancedService, DecimalPipe],
 })
 
-/**
- * Advanced table component
- */
 export class AdvancedtableComponent implements OnInit {
-  // bread crum data
   breadCrumbItems: Array<{}>;
-  // Table data
-  tableData: Table[];
+  tableData: any[];
   public selected: any;
   hideme: boolean[] = [];
-  tables$: Observable<Table[]>;
+  tables$: Observable<any[]>;
   total$: Observable<number>;
   editableTable: any;
-
-  @ViewChildren(AdvancedSortableDirective) headers: QueryList<AdvancedSortableDirective>;
+  totalPage:number;
+  currentpage:number;
+  loading:boolean=true;
+  @ViewChildren(AdvancedSortableDirective)
+  headers: QueryList<AdvancedSortableDirective>;
   public isCollapsed = true;
 
   constructor(
     public service: AdvancedService,
     private modalService: NgbModal,
-    ) {
+    private vehicleService: VehicleService
+  ) {
     this.tables$ = service.tables$;
     this.total$ = service.total$;
   }
 
-  settings = {
-    columns: {
-      id: {
-        title: 'ID',
-      },
-      name: {
-        title: 'Full Name',
-        filter: {
-          type: 'list',
-          config: {
-            selectText: 'Select...',
-            list: [
-              { value: 'Glenna Reichert', title: 'Glenna Reichert' },
-              { value: 'Kurtis Weissnat', title: 'Kurtis Weissnat' },
-              { value: 'Chelsey Dietrich', title: 'Chelsey Dietrich' },
-            ],
-          },
-        },
-      },
-      email: {
-        title: 'Email',
-        filter: {
-          type: 'completer',
-          config: {
-            completer: {
-              data: editableTable,
-              searchFields: 'email',
-              titleField: 'email',
-            },
-          },
-        },
-      },
-    },
-  };
-
   ngOnInit() {
-    this.breadCrumbItems = [{ label: 'Vehicle' }, { label: 'List', active: true }];
-    /**
-     * fetch data
-     */
+    this.breadCrumbItems = [
+      { label: "Vehicle" },
+      { label: "List", active: true },
+    ];
+    this.currentpage = 1;
     this._fetchData();
   }
 
-  changeValue(i) {
+  changeValue(i, id: string) {
     this.hideme[i] = !this.hideme[i];
+    this._fetchDataSeat(id);
   }
 
-
-  /**
-   * fetches the table value
-   */
   _fetchData() {
-    this.tableData = tableData;
-    this.editableTable = editableTable;
-    for (let i = 0; i <= this.tableData.length; i++) {
-      this.hideme.push(true);
-    }
+    this.vehicleService.getVehicle().subscribe((data: any) => {
+      this.tableData = data.vehicles;
+      this.totalPage = data.count;
+      this.loading = false;
+    });
+  }
+
+  _fetchDataSeat(id: string) {
+    this.loading = true;
+    this.vehicleService.getVehicleSeatID(id).subscribe((data: any) => {
+      this.editableTable = data.seat;
+      this.loading =false;
+    });
+  }
+
+  getPageVehicle(event): void {
+    this.loading = true;
+    this.currentpage = event;
+    this.vehicleService.getVehicle(event).subscribe((data: any) => {
+      this.tableData = data.stations;
+      this.loading = false;
+    });
   }
 
   /**
@@ -109,9 +87,9 @@ export class AdvancedtableComponent implements OnInit {
    */
   onSort({ column, direction }: SortEvent) {
     // resetting other headers
-    this.headers.forEach(header => {
+    this.headers.forEach((header) => {
       if (header.sortable !== column) {
-        header.direction = '';
+        header.direction = "";
       }
     });
     this.service.sortColumn = column;
@@ -121,7 +99,7 @@ export class AdvancedtableComponent implements OnInit {
    * Open modal
    * @param contentdelete modal content
    */
-   openModalDelete(contentdelete: any) {
+  openModalDelete(contentdelete: any) {
     this.modalService.open(contentdelete);
   }
 }
