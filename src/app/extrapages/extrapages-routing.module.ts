@@ -17,7 +17,7 @@ const routes: Routes = [
     component: Page500Component,
   },
   {
-    path: "lock-screen-1",
+    path: "reset-password",
     component: LockscreenComponent,
   },
 

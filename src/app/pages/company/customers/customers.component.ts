@@ -155,8 +155,9 @@ export class CustomersComponent implements OnInit {
       this.formData.patchValue({
         id: item._id,
         name: item.name,
-        address: item.address,
-        company: item.company,
+        description: item.description,
+        station: item.station._id,
+        vehicles: item.vehicles[0]?._id,
       });
     } else {
       this.formData.reset();

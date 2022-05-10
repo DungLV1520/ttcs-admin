@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-verification',
   templateUrl: './verification.component.html',
-  styleUrls: ['./verification.component.scss']
 })
 export class VerificationComponent implements OnInit {
 
@@ -14,5 +13,4 @@ export class VerificationComponent implements OnInit {
     document.body.classList.remove('auth-body-bg')
 
   }
-
 }

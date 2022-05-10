@@ -66,7 +66,7 @@ export const MENU: MenuItem[] = [
       {
         id: 64,
         label: "MENUITEMS.AUTHENTICATION.LIST.LOCKSCREEN",
-        link: "/pages/lock-screen-1",
+        link: "/pages/reset-password",
         parentId: 57,
       },
 

@@ -47,4 +47,7 @@ export class AuthService {
   updateProfile(user: User) {
     return this.http.put(`${this.SERVER_URL}/users/update`, user);
   }
+  forgetPass(user: any) {
+    return this.http.post(`${this.SERVER_URL}/users/forgot`, user);
+  }
 }
