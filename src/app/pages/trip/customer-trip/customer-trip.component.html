@@ -17,21 +17,60 @@
       <div class="card">
         <div class="card-body">
           <div class="row mb-2">
-            <div class="col-sm-4">
-              <div class="search-box me-2 mb-2 d-inline-block">
+            <div class="col-sm-3">
+              <div class="search-box me-2 mb-2 ">
                 <div class="position-relative">
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Search..."
-                    [(ngModel)]="term"
-                  />
-                  <i class="bx bx-search-alt search-icon"></i>
+                  <label>From Station</label>
+                  <ng-select
+                    placeholder="Enter from station"
+                    [items]="provinceData"
+                    bindLabel="name"
+                    bindValue="idProvince"
+                    [(ngModel)]="from"
+                  ></ng-select>
                 </div>
               </div>
             </div>
-            <div class="col-sm-8">
-              <div class="text-sm-end">
+            <div class="col-sm-3">
+              <div class="search-box me-2 mb-2 ">
+                <div class="position-relative">
+                  <label>To Station</label>
+                  <ng-select
+                    placeholder="Enter to station"
+                    [items]="provinceData"
+                    bindLabel="name"
+                    bindValue="idProvince"
+                    [(ngModel)]="to"
+                  ></ng-select>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="search-box me-2 mb-2 d-inline-block">
+                <div class="position-relative">
+                  <label>Start Time</label>
+                  <input
+                    class="form-control"
+                    placeholder="yyyy-mm-dd"
+                    name="dp"
+                    ngbDatepicker
+                    #d1="ngbDatepicker"
+                    (click)="d1.toggle()"
+                    autocomplete="off"
+                    [(ngModel)]="startTime"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="text-sm-end" style="margin-top: 25px;">
+                <button
+                  type="button"
+                  class="btn btn-success btn-rounded mb-2 mx-2"
+                  (click)="searchTrip()"
+                >
+                  <i class="mdi mdi-plus me-1"></i> Search
+                </button>
                 <button
                   type="button"
                   class="btn btn-success btn-rounded mb-2 mr-2"
@@ -79,7 +118,7 @@
                     <p class="mb-1">{{ getToProvince(customers.to) }}</p>
                   </td>
                   <td>{{ customers.startTime | date: "dd MMM, YYYY" }}</td>
-                  <td>{{ customers.price |currency:'':'':'1.2-2' }}</td>
+                  <td>{{ customers.price | currency: "":"":"1.2-2" }}</td>
                   <td style="text-align: center">
                     <div class="dropdown" ngbDropdown placement="bottom-right">
                       <a

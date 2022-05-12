@@ -9,6 +9,7 @@ import { Page500Component } from "./page500/page500.component";
 import { LockscreenComponent } from "./lockscreen/lockscreen.component";
 import { ConfirmmailComponent } from "./confirmmail/confirmmail.component";
 import { VerificationComponent } from "./verification/verification.component";
+import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   // tslint:disable-next-line: max-line-length
@@ -24,6 +25,7 @@ import { VerificationComponent } from "./verification/verification.component";
     CarouselModule,
     ExtrapagesRoutingModule,
     NgOtpInputModule,
+    ReactiveFormsModule
   ],
 })
 export class ExtrapagesModule {}

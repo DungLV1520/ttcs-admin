@@ -1,4 +1,4 @@
-<div class="container-fluid" style="position: relative;">
+<div class="container-fluid" style="position: relative">
   <div
     class="spinner-border text-info m-1"
     role="status"
@@ -25,6 +25,7 @@
                     class="form-control"
                     placeholder="Search..."
                     [(ngModel)]="term"
+                    (keyup)="searchCompany()"
                   />
                   <i class="bx bx-search-alt search-icon"></i>
                 </div>
@@ -84,9 +85,12 @@
                   </td>
 
                   <td>{{ customers.station?.name }}</td>
-                  <td *ngFor="let item of customers.vehicles">
-                    <p class="mb-1">{{ item.name }}</p>
+                  <td>
+                    <div *ngFor="let item of customers.vehicles">
+                      <p class="mb-1">{{ item.name }}</p>
+                    </div>
                   </td>
+
                   <td>{{ customers.createdAt | date: "dd MMM, YYYY" }}</td>
                   <td>{{ customers.updatedAt | date: "dd MMM, YYYY" }}</td>
                   <td>

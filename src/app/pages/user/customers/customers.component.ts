@@ -3,10 +3,9 @@ import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
 import { UserService } from "../user.service";
-
 import { Customers } from "./customers.model";
-
-import { customersData } from "./data";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 @Component({
   selector: "app-customers",
@@ -14,6 +13,7 @@ import { customersData } from "./data";
   styleUrls: ["./customers.component.scss"],
 })
 export class CustomersComponent implements OnInit {
+  modelChanged = new Subject<any>();
   breadCrumbItems: Array<{}>;
   formData: FormGroup;
   submitted = false;
@@ -60,6 +60,13 @@ export class CustomersComponent implements OnInit {
 
     this.currentpage = 1;
     this._fetchData();
+    this.modelChanged
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe((model) => {
+        this.userService.searchUser(model).subscribe((data: any) => {
+          this.customersData = data.users;
+        });
+      });
   }
 
   private _fetchData() {
@@ -90,12 +97,12 @@ export class CustomersComponent implements OnInit {
     if (this.formData.valid) {
       this.userService.createUser(this.formData.value).subscribe(
         (data) => {
-          this.toastService.success("Create station success!");
+          this.toastService.success("Create user success!");
           this._fetchData();
           this.modalService.dismissAll();
         },
         (err) => {
-          this.toastService.error("Create station failed!");
+          this.toastService.error("Create user failed!");
         }
       );
     }
@@ -105,12 +112,12 @@ export class CustomersComponent implements OnInit {
     if (this.formData.valid) {
       this.userService.updateUser(this.formData.value, id).subscribe(
         (data) => {
-          this.toastService.success("Update station success!");
+          this.toastService.success("Update user success!");
           this._fetchData();
           this.modalService.dismissAll();
         },
         (err) => {
-          this.toastService.error("Update station failed!");
+          this.toastService.error("Update user failed!");
         }
       );
     }
@@ -169,5 +176,12 @@ export class CustomersComponent implements OnInit {
   openModalDelete(contentdelete: any, id: string) {
     this.idDelete = id;
     this.modalService.open(contentdelete);
+  }
+
+  searchUser(): void {
+    const user = {
+      value: this.term,
+    };
+    this.modelChanged.next(user);
   }
 }

@@ -26,4 +26,9 @@ export class CompanyService {
   deleteCompany(id:string) {
     return this.http.delete(`${this.SERVER_URL}/companies/${id}`);
   }
+
+
+  searchCompany(company:any) {
+    return this.http.post(`${this.SERVER_URL}/companies/search`,company);
+  }
 }

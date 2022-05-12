@@ -22,7 +22,6 @@ import { StationModule } from "./station/station.module";
 import { TripModule } from "./trip/trip.module";
 import { CryptoModule } from "./crypto/crypto.module";
 import { ContactsModule } from "./profile/contacts.module";
-import { UtilityModule } from "./utility/utility.module";
 import { UiModule } from "./ui/ui.module";
 import { FormModule } from "./form/form.module";
 import { TablesModule } from "./tables/tables.module";
@@ -56,7 +55,6 @@ FullCalendarModule.registerPlugins([
     HttpClientModule,
     UIModule,
     ContactsModule,
-    UtilityModule,
     UiModule,
     FormModule,
     TablesModule,

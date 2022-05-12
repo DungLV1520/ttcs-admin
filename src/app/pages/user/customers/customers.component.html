@@ -25,6 +25,7 @@
                     class="form-control"
                     placeholder="Search..."
                     [(ngModel)]="term"
+                    (keyup)="searchUser()"
                   />
                   <i class="bx bx-search-alt search-icon"></i>
                 </div>

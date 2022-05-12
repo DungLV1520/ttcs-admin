@@ -24,6 +24,7 @@ import { CryptoRoutingModule } from "./crypto-routing.module";
 import { OrderSortableService } from "./orders/orders-sortable.directive";
 
 import { OrdersComponent } from "./orders/orders.component";
+import { Ng5SliderModule } from "ng5-slider";
 
 @NgModule({
   declarations: [OrdersComponent, OrderSortableService],
@@ -43,6 +44,7 @@ import { OrdersComponent } from "./orders/orders.component";
     ArchwizardModule,
     DropzoneModule,
     SimplebarAngularModule,
+    Ng5SliderModule,
   ],
 })
 export class CryptoModule {}

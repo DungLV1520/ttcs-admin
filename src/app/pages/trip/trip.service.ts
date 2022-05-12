@@ -31,4 +31,7 @@ export class TripService {
     return this.http.delete(`${this.SERVER_URL}/trips/${id}`);
   }
 
+  searchTrip(trip:any) {
+    return this.http.post(`${this.SERVER_URL}/trips/search`,trip);
+  }
 }

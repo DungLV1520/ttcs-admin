@@ -11,7 +11,6 @@ const routes: Routes = [
   { path: 'vehicle', loadChildren: () => import('./vehicle/vehicle.module').then(m => m.VehicleModule) },
   { path: 'crypto', loadChildren: () => import('./crypto/crypto.module').then(m => m.CryptoModule) },
   { path: 'contacts', loadChildren: () => import('./profile/contacts.module').then(m => m.ContactsModule) },
-  { path: 'pages', loadChildren: () => import('./utility/utility.module').then(m => m.UtilityModule) },
   { path: 'ui', loadChildren: () => import('./ui/ui.module').then(m => m.UiModule) },
   { path: 'form', loadChildren: () => import('./form/form.module').then(m => m.FormModule) },
   { path: 'tables', loadChildren: () => import('./tables/tables.module').then(m => m.TablesModule) },

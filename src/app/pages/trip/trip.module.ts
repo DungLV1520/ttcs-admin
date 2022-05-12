@@ -12,6 +12,7 @@ import {
   NgbDropdownModule,
   NgbPaginationModule,
   NgbModalModule,
+  NgbDatepickerModule,
 } from "@ng-bootstrap/ng-bootstrap";
 import { DropzoneModule } from "ngx-dropzone-wrapper";
 import { DROPZONE_CONFIG } from "ngx-dropzone-wrapper";
@@ -46,6 +47,7 @@ const config: DropzoneConfigInterface = {
     Ng5SliderModule,
     NgSelectModule,
     NgbPaginationModule,
+    NgbDatepickerModule
   ],
   providers: [
     {

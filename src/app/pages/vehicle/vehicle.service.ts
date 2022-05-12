@@ -16,15 +16,35 @@ export class VehicleService {
     return this.http.get(`${this.SERVER_URL}/seats/${id}`);
   }
 
-  creatVehicle(stations:any) {
-    return this.http.post(`${this.SERVER_URL}/vehicles`,stations);
+  creatVehicle(vehicles:any) {
+    return this.http.post(`${this.SERVER_URL}/vehicles`,vehicles);
   }
 
-  updateVehicle(stations:any,id:string) {
-    return this.http.put(`${this.SERVER_URL}/vehicles/${id}`,stations);
+  creatSeat(seat:any) {
+    return this.http.post(`${this.SERVER_URL}/seats`,seat);
+  }
+
+  updateVehicle(vehicles:any,id:string) {
+    return this.http.put(`${this.SERVER_URL}/vehicles/${id}`,vehicles);
+  }
+
+  updateSeat(seats:any,id:string) {
+    return this.http.put(`${this.SERVER_URL}/seats/${id}`,seats);
   }
 
   deleteVehicle(id:string) {
     return this.http.delete(`${this.SERVER_URL}/vehicles/${id}`);
+  }
+
+  deleteSeat(id:string) {
+    return this.http.delete(`${this.SERVER_URL}/seats/${id}`);
+  }
+
+  getAllSeat() {
+    return this.http.get(`${this.SERVER_URL}/seats/all`);
+  }
+
+  getSeat(id:string) {
+    return this.http.get(`${this.SERVER_URL}/seats/${id}`);
   }
 }

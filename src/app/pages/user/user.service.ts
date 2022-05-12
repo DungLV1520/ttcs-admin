@@ -31,4 +31,8 @@ export class UserService {
     return this.http.delete(`${this.SERVER_URL}/users/${id}`);
   }
 
+  searchUser(user:any) {
+    return this.http.post(`${this.SERVER_URL}/users/search`,user);
+  }
+
 }

@@ -29,6 +29,9 @@ export class CustomerTripComponent implements OnInit {
   customerDataVehicle: any;
   _number: number;
   loading: boolean = true;
+  from: number;
+  to: number;
+  startTime: any;
 
   constructor(
     private modalService: NgbModal,
@@ -72,7 +75,6 @@ export class CustomerTripComponent implements OnInit {
   private _fetchDataVehicle() {
     this.vehicleService.getVehicle().subscribe((data: any) => {
       this.customerDataVehicle = data.vehicles;
-      console.log(this.customerDataVehicle);
     });
   }
 
@@ -97,8 +99,6 @@ export class CustomerTripComponent implements OnInit {
 
   saveCustomer() {
     const id = this.formData.value.id;
-    console.log(id);
-
     if (id !== undefined) {
       this.updateTrip(id);
     } else {
@@ -156,7 +156,6 @@ export class CustomerTripComponent implements OnInit {
    * @param content modal content
    */
   openModal(content?: any, checkEdit?: boolean, item?: any) {
-    console.log(item);
     this.title = !checkEdit ? "Add Trip" : "Update Trip";
     this.modalService.open(content);
     if (checkEdit) {
@@ -207,5 +206,24 @@ export class CustomerTripComponent implements OnInit {
       }
     }
     return id;
+  }
+
+  searchTrip(): void {
+    console.log(this.from);
+    console.log(this.to);
+    console.log(this.startTime);
+    if (this.from && this.to) {
+      const objTrips = {
+        from: this.from,
+        to: this.to,
+        startTime: moment(this.startTime).format(),
+      };
+      this.tripService.searchTrip(objTrips).subscribe((data: any) => {
+        this.customersData = data.trips;
+      });
+    }
+    else{
+      this._fetchData();
+    }
   }
 }

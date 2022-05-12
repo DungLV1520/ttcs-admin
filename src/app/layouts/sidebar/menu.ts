@@ -25,12 +25,7 @@ export const MENU: MenuItem[] = [
     icon: "bxs-user-detail",
     link: "/user/list",
   },
-  {
-    id: 48,
-    label: "Ticket",
-    icon: "bx bx-right-indent",
-    link: "/ticket/list",
-  },
+
   {
     id: 48,
     label: "Company",
@@ -45,46 +40,17 @@ export const MENU: MenuItem[] = [
   },
   {
     id: 21,
-    label: "MENUITEMS.CRYPTO.TEXT",
-    icon: "bx-bitcoin",
+    label: "Seat",
+    icon: "bx bx-album",
     link: "/crypto/orders",
   },
   {
-    id: 56,
-    label: "MENUITEMS.PAGES.TEXT",
-    isTitle: true,
+    id: 48,
+    label: "Ticket",
+    icon: "bx bx-right-indent",
+    link: "/ticket/list",
   },
-  {
-    id: 57,
-    label: "MENUITEMS.AUTHENTICATION.TEXT",
-    icon: "bx-user-circle",
-    badge: {
-      variant: "success",
-      text: "MENUITEMS.AUTHENTICATION.BADGE",
-    },
-    subItems: [
-      {
-        id: 64,
-        label: "MENUITEMS.AUTHENTICATION.LIST.LOCKSCREEN",
-        link: "/pages/reset-password",
-        parentId: 57,
-      },
 
-      {
-        id: 66,
-        label: "MENUITEMS.AUTHENTICATION.LIST.CONFIRMMAIL",
-        link: "/pages/confirm-mail",
-        parentId: 57,
-      },
-
-    ],
-  },
-  {
-    id: 72,
-    label: "MENUITEMS.UTILITY.TEXT",
-    icon: "bx-file",
-    link: "/pages/timeline",
-  },
   {
     id: 80,
     label: "MENUITEMS.COMPONENTS.TEXT",

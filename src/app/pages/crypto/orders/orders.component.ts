@@ -1,57 +1,65 @@
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
-import { Observable } from 'rxjs';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-import { OrderSortableService, SortEvent } from './orders-sortable.directive'
-
-import { OrderService } from './orders.service'
-import { Orders } from './orders.model'
-import { ordersData } from './data'
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { Router } from "@angular/router";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ToastrService } from "ngx-toastr";
+import { StationService } from "../../station/station.service";
+import { VehicleService } from "../../vehicle/vehicle.service";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { SeatService } from './orders.service';
 
 @Component({
-  selector: 'app-orders',
-  templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.scss'],
-  providers: [OrderService, DecimalPipe]
-
+  selector: "app-orders",
+  templateUrl: "./orders.component.html",
+  styleUrls: ["./orders.component.scss"],
+  providers: [],
 })
 export class OrdersComponent implements OnInit {
-  // breadcrumb items
+  modelChanged = new Subject<any>();
   breadCrumbItems: Array<{}>;
+  formData: FormGroup;
+  submitted = false;
+  customersData: any[];
+  term: any;
+  title!: string;
+  currentpage: number;
+  totalPage: number;
+  idDelete: string;
+  stationsData: any;
+  vehicleData: any;
+  loading: boolean = true;
+  constructor(
+    private modalService: NgbModal,
+    private toastService: ToastrService,
+    private seatService: SeatService
+  ) {}
 
-  ordersData: Orders[];
+  ngOnInit() {
+    this.breadCrumbItems = [
+      { label: "Seat" },
+      { label: "List", active: true },
+    ];
 
-  orders$: Observable<Orders[]>;
-  total$: Observable<number>;
-  model: NgbDateStruct;
-  @ViewChildren(OrderSortableService) headers: QueryList<OrderSortableService>;
-
-  constructor(public service: OrderService) {
-    this.orders$ = service.orders$;
-    this.total$ = service.total$;
+    this.currentpage = 1;
+    this._fetchData();
   }
 
-  ngOnInit(): void {
-    this.breadCrumbItems = [{ label: 'Crypto' }, { label: 'Orders', active: true }];
-
-    this.ordersData = ordersData;
-  }
-
-  /**
-  * Sort table data
-  * @param param0 sort the column
-  *
-  */
-  onSort({ column, direction }: SortEvent) {
-  
-    // resetting other headers
-    this.headers.forEach(header => {
-      if (header.sortable !== column) {
-        header.direction = '';
-      }
+  getPageSeat(event): void {
+    this.loading =true;
+    this.currentpage = event;
+    this.seatService.getSeat(event).subscribe((data: any) => {
+      this.customersData = data.seats;
+      this.loading = false;
     });
-    this.service.sortColumn = column;
-    this.service.sortDirection = direction;
+  }
+  private _fetchData() {
+    this.seatService.getSeat().subscribe((data: any) => {
+      this.customersData = data.seats;
+      this.totalPage = data.count;
+      this.loading=false;
+    });
   }
 }
+

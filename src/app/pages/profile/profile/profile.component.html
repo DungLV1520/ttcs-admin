@@ -4,86 +4,17 @@
     [breadcrumbItems]="breadCrumbItems"
   ></app-page-title>
 
-  <div class="row">
-    <div class="col-xl-4">
-      <div class="card overflow-hidden">
-        <div class="bg-soft bg-primary">
-          <div class="row">
-            <div class="col-7">
-              <div class="text-primary p-3">
-                <h5 class="text-primary">Welcome Back !</h5>
-              </div>
-            </div>
-            <div class="col-5 align-self-end">
-              <img
-                src="assets/images/profile-img.png"
-                alt=""
-                class="img-fluid"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="card-body pt-0">
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="avatar-md profile-user-wid mb-4">
-                <img
-                  src="assets/images/users/avatar-1.jpg"
-                  alt=""
-                  class="img-thumbnail rounded-circle"
-                />
-              </div>
-            </div>
-            <h5 >Cynthia Price</h5>
-
-          </div>
-        </div>
-      </div>
-      <!-- end card -->
-
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title mb-4">Personal Information</h4>
-
-          <p class="text-muted mb-4">
-            Hi I'm Cynthia Price,has been the industry's standard dummy text To
-            an English person, it will seem like simplified English, as a
-            skeptical Cambridge.
-          </p>
-          <div class="table-responsive">
-            <table class="table table-nowrap mb-0">
-              <tbody>
-                <tr>
-                  <th scope="row">Full Name :</th>
-                  <td>Cynthia Price</td>
-                </tr>
-                <tr>
-                  <th scope="row">Mobile :</th>
-                  <td>(123) 123 1234</td>
-                </tr>
-                <tr>
-                  <th scope="row">E-mail :</th>
-                  <td>cynthiaskote@gmail.com</td>
-                </tr>
-                <tr>
-                  <th scope="row">Location :</th>
-                  <td>California, United States</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <!-- end card -->
-    </div>
-
+  <div
+    class="row"
+    style="display: flex; justify-content: center; align-items: center"
+  >
     <div class="col-xl-8">
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
             <h4 class="card-title mb-4">Profile Setting</h4>
 
-            <form>
+            <form (ngSubmit)="submitProfile()" [formGroup]="FormProfile">
               <div class="row mb-4">
                 <label
                   for="horizontal-firstname-input"
@@ -94,38 +25,20 @@
                   <input
                     type="text"
                     class="form-control"
+                    placeholder="Enter your name"
                     id="horizontal-firstname-input"
+                    formControlName="name"
                   />
                 </div>
               </div>
-              <div class="row mb-4">
-                <label
-                  for="horizontal-email-input"
-                  class="col-sm-3 col-form-label"
-                  >Email</label
-                >
-                <div class="col-sm-9">
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="horizontal-email-input"
-                  />
-                </div>
-              </div>
-
-              <div class="row mb-4">
-                <label for="formFile" class="col-sm-3 col-form-label"
-                  >Avatar</label
-                >
-                <div class="col-sm-9">
-                  <input class="form-control" type="file" id="formFile" />
-                </div>
-              </div>
-              <!-- end row -->
               <div class="row justify-content-end">
                 <div class="col-sm-9">
                   <div>
-                    <button type="submit" class="btn btn-primary w-md">
+                    <button
+                      [disabled]="!FormProfile.valid"
+                      type="submit"
+                      class="btn btn-primary w-md"
+                    >
                       Save
                     </button>
                   </div>
@@ -139,7 +52,7 @@
         <div class="card">
           <div class="card-body">
             <h4 class="card-title mb-4">Change Password</h4>
-            <form (ngSubmit)="typeSubmit()" [formGroup]="typeValidationForm">
+            <form (ngSubmit)="typeSubmit()" [formGroup]="FormPassword">
               <div class="row mb-4">
                 <label
                   for="horizontal-email-input"
@@ -151,6 +64,9 @@
                     type="email"
                     class="form-control"
                     id="horizontal-email-input"
+                    autocomplete="current-password"
+                    placeholder="Current Password"
+                    formControlName="oldPassword"
                   />
                 </div>
               </div>
@@ -164,8 +80,9 @@
                   <input
                     type="password"
                     class="form-control"
-                    placeholder="Password"
-                    formControlName="password"
+                    placeholder="New Password"
+                    autocomplete="new-password"
+                    formControlName="newPassword"
                     [ngClass]="{
                       'is-invalid': typesubmit && type.password.errors
                     }"
@@ -213,11 +130,14 @@
                 </div>
               </div>
 
-
               <div class="row justify-content-end">
                 <div class="col-sm-9">
                   <div>
-                    <button type="submit" class="btn btn-primary w-md">
+                    <button
+                      [disabled]="!FormPassword.valid"
+                      type="submit"
+                      class="btn btn-primary w-md"
+                    >
                       Save
                     </button>
                   </div>
