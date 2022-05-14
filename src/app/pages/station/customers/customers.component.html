@@ -80,7 +80,9 @@
                     <p class="mb-1">{{ customers.address }}</p>
                   </td>
                   <td>
-                    <p class="mb-1">{{ customers?.company?.name }}</p>
+                    <div *ngFor="let item of customers.company">
+                      <p class="mb-1">{{ item.name }}</p>
+                    </div>
                   </td>
                   <td>{{ customers.createdAt | date: "dd MMM, YYYY" }}</td>
                   <td>{{ customers.updatedAt | date: "dd MMM, YYYY" }}</td>
@@ -178,6 +180,7 @@
             <ng-select
               placeholder="Enter company"
               [items]="comapnyItem"
+              [multiple]="true"
               bindLabel="name"
               bindValue="_id"
               formControlName="company"

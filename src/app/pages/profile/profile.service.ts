@@ -7,16 +7,19 @@ export class ProfileService {
 
   constructor(private http: HttpClient) {}
 
-  saveProfile(profile: any) {
-    return this.http.post(`${this.SERVER_URL}/users/update`, profile);
+  updateProfile(profile: any) {
+    console.log(profile);
+    console.log("aaa");
+
+    return this.http.put(`${this.SERVER_URL}/users/update`, profile);
   }
 
-  savePassword(password: any) {
-    return this.http.post(`${this.SERVER_URL}/update/password`, password);
+  updatePassword(password: any) {
+    return this.http.put(`${this.SERVER_URL}/users/update/password`, password);
   }
 
   resetPassword(password: any) {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     return this.http.post(`${this.SERVER_URL}/reset/${token}`, password);
   }
 }

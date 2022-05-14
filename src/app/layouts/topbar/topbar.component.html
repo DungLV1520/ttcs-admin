@@ -30,7 +30,6 @@
       >
         <i class="fa fa-fw fa-bars"></i>
       </button>
-
     </div>
 
     <div class="d-flex">
@@ -139,8 +138,6 @@
         </div>
       </div>
 
-
-
       <div class="dropdown d-inline-block" ngbDropdown>
         <button
           type="button"
@@ -153,7 +150,7 @@
             src="assets/images/users/avatar-1.jpg"
             alt="Header Avatar"
           /> -->
-          <span class="d-none d-xl-inline-block ms-1">Henry</span>
+          <span class="d-none d-xl-inline-block ms-1">{{ account?.name }}</span>
           <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>

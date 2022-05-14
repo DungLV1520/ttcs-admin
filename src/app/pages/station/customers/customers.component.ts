@@ -22,7 +22,7 @@ export class CustomersComponent implements OnInit {
   currentpage: number;
   idDelete: string;
   comapnyItem: any;
-  loading:boolean = true;
+  loading: boolean = true;
   public totalPage: number;
   constructor(
     private modalService: NgbModal,
@@ -31,7 +31,7 @@ export class CustomersComponent implements OnInit {
     private stationService: StationService,
     private companyService: CompanyService,
     private toastService: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.breadCrumbItems = [
@@ -40,6 +40,7 @@ export class CustomersComponent implements OnInit {
     ];
 
     this.formData = this.formBuilder.group({
+      id: [""],
       name: ["", [Validators.required]],
       address: ["", [Validators.required]],
       company: ["", [Validators.required]],
@@ -61,7 +62,7 @@ export class CustomersComponent implements OnInit {
     this.stationService.getStation().subscribe((data: any) => {
       this.customersData = data.stations;
       this.totalPage = data.count;
-      this.loading =false;
+      this.loading = false;
     });
   }
 
@@ -70,9 +71,9 @@ export class CustomersComponent implements OnInit {
   }
 
   saveStation() {
-    const id = this.formData.value._id;
+    const id = this.formData.value.id;
     console.log(id);
-    if (id !== undefined) {
+    if (id !== undefined && id !== null) {
       this.updateStation(id);
     } else {
       this.creatStation();
@@ -126,11 +127,11 @@ export class CustomersComponent implements OnInit {
   }
 
   getPageStation(event): void {
-    this.loading =true;
+    this.loading = true;
     this.currentpage = event;
     this.stationService.getStation(event).subscribe((data: any) => {
       this.customersData = data.stations;
-      this.loading =false;
+      this.loading = false;
     });
   }
 
@@ -148,8 +149,12 @@ export class CustomersComponent implements OnInit {
    * Open modal
    * @param content modal content
    */
+  companyArrays: any;
   openModal(content?: any, checkEdit?: boolean, item?: any) {
-    console.log(item);
+    console.log(this.companyArrays);
+    // this.comapnyItem = item.company;
+
+    this.submitted = false;
     this.title = !checkEdit ? "Add Station" : "Update Station";
     this.modalService.open(content);
     if (checkEdit) {

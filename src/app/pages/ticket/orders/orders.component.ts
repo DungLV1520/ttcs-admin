@@ -1,168 +1,83 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { TicketService } from "../ticket.service";
+import { ToastrService } from "ngx-toastr";
+import { province } from "../../trip/customer-trip/trips";
 
 @Component({
   selector: "app-orders",
   templateUrl: "./orders.component.html",
   styleUrls: ["./orders.component.scss"],
 })
-
-/**
- * Ecommerce orders component
- */
 export class OrdersComponent implements OnInit {
-  // bread crumb items
   breadCrumbItems: Array<{}>;
   term: any;
-  transactions: any;
-  formData: FormGroup;
   submitted = false;
   customersData: any[];
-
+  idDelete: string;
   title: string;
+  currentpage: number;
+  provinceData: any[] = [];
   constructor(
     private modalService: NgbModal,
-    private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private ticketService: TicketService,
+    private toastService: ToastrService
   ) {}
 
   ngOnInit() {
-    this.formData = this.formBuilder.group({
-      username: ["", [Validators.required]],
-      phone: ["", [Validators.required]],
-      email: [
-        "",
-        [
-          Validators.required,
-          Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$"),
-        ],
-      ],
-      address: ["", [Validators.required]],
-      balance: ["", [Validators.required]],
-    });
     this.breadCrumbItems = [
       { label: "Ticket" },
       { label: "List", active: true },
     ];
-
-    this.transactions = [
-      {
-        id: "#SK2540",
-        name: "Neal Matthews",
-        date: "07 Oct, 2019",
-        total: "$400",
-        status: "Paid",
-        payment: ["fab fa-cc-mastercard", "Mastercard"],
-        index: 1,
-      },
-      {
-        id: "#SK2541",
-        name: "Jamal Burnett",
-        date: "07 Oct, 2019",
-        total: "$380",
-        status: "Chargeback",
-        payment: ["fab fa-cc-visa", "Visa"],
-        index: 2,
-      },
-      {
-        id: "#SK2542",
-        name: "Juan Mitchell",
-        date: "06 Oct, 2019",
-        total: "$384",
-        status: "Paid",
-        payment: ["fab fa-cc-paypal", "Paypal"],
-        index: 3,
-      },
-      {
-        id: "#SK2543",
-        name: "Barry Dick",
-        date: "05 Oct, 2019",
-        total: "$412",
-        status: "Paid",
-        payment: ["fab fa-cc-mastercard", "Mastercard"],
-        index: 4,
-      },
-      {
-        id: "#SK2544",
-        name: "Ronald Taylor",
-        date: "04 Oct, 2019",
-        total: "$404",
-        status: "Refund",
-        payment: ["fab fa-cc-visa", "Visa"],
-        index: 5,
-      },
-      {
-        id: "#SK2545",
-        name: "Jacob Hunter",
-        date: "04 Oct, 2019",
-        total: "$392",
-        status: "Paid",
-        payment: ["fab fa-cc-paypal", "Paypal"],
-        index: 6,
-      },
-      {
-        id: "#SK2546",
-        name: "William Cruz",
-        date: "03 Oct, 2019",
-        total: "$374",
-        status: "Paid",
-        payment: ["fas fa-money-bill-alt", "COD"],
-        index: 7,
-      },
-      {
-        id: "#SK2547",
-        name: "Dustin Moser",
-        date: "02 Oct, 2019",
-        total: "$350",
-        status: "Paid",
-        payment: ["fab fa-cc-mastercard", "Mastercard"],
-        index: 8,
-      },
-      {
-        id: "#SK2548",
-        name: "Clark Benson",
-        date: "01 Oct, 2019",
-        total: "$345",
-        status: "Refund",
-        payment: ["fab fa-cc-visa", "Visa"],
-        index: 9,
-      },
-    ];
+    this.currentpage = 1;
+    this._province();
+    this._fetchData();
   }
-  openModal(content: any) {
+  dataItem: any;
+  openModal(content: any, dataItem: any) {
+    this.dataItem = dataItem;
+    console.log(this.dataItem);
+
     this.modalService.open(content, { centered: true });
+  }
+  totalPage: number;
+  loading: boolean = false;
+  private _fetchData() {
+    this.ticketService.getTicket().subscribe((data: any) => {
+      this.customersData = data.bookings;
+      this.totalPage = data.count;
+      this.loading = false;
+    });
+  }
+
+  deleteStation() {
+    console.log(this.idDelete);
+    this.ticketService.deleteTicket(this.idDelete).subscribe(
+      (data) => {
+        this.toastService.success("Delete ticket success!");
+        this._fetchData();
+      },
+      (err) => {
+        this.toastService.error("Delete ticket failed!");
+      }
+    );
+    this.modalService.dismissAll();
+    this.submitted = true;
+  }
+
+  getPageTicket(event): void {
+    this.loading = true;
+    this.currentpage = event;
+    this.ticketService.getTicket(event).subscribe((data: any) => {
+      this.customersData = data.bookings;
+      this.loading = false;
+    });
   }
 
   navigateStation(): void {
     this.router.navigateByUrl("ticket/detail");
-  }
-  get form() {
-    return this.formData.controls;
-  }
-  saveCustomer() {
-    const currentDate = new Date();
-    if (this.formData.valid) {
-      const stationName = this.formData.get("stationName").value;
-      const company = this.formData.get("company").value;
-      const phone = this.formData.get("phone").value;
-      const address = this.formData.get("address").value;
-      const balance = this.formData.get("balance").value;
-
-      this.customersData.push({
-        id: this.customersData.length + 1,
-        stationName,
-        company,
-        phone,
-        address,
-        balance,
-        rating: "4.3",
-        date: currentDate + ":",
-      });
-      this.modalService.dismissAll();
-    }
-    this.submitted = true;
   }
 
   /**
@@ -178,7 +93,33 @@ export class OrdersComponent implements OnInit {
    * Open modal
    * @param contentdelete modal content
    */
-  openModalDelete(contentdelete: any) {
+  openModalDelete(contentdelete: any, id: string) {
+    this.idDelete = id;
     this.modalService.open(contentdelete);
+  }
+
+  getProvince(from: any) {
+    let id = 0;
+    for (let i = 0; i < this.provinceData.length; i++) {
+      if (this.provinceData[i].idProvince === from) {
+        id = this.provinceData[i].name;
+        break;
+      }
+    }
+    return id;
+  }
+
+  private _province() {
+    this.provinceData = province;
+  }
+  getToProvince(to: any) {
+    let id = 0;
+    for (let i = 0; i < this.provinceData.length; i++) {
+      if (this.provinceData[i].idProvince === to) {
+        id = this.provinceData[i].name;
+        break;
+      }
+    }
+    return id;
   }
 }

@@ -15,7 +15,7 @@ import { ToastrService } from "ngx-toastr";
   selector: "app-advancedtable",
   templateUrl: "./advancedtable.component.html",
   styleUrls: ["./advancedtable.component.scss"],
-  providers: [ DecimalPipe],
+  providers: [DecimalPipe],
 })
 export class AdvancedtableComponent implements OnInit {
   breadCrumbItems: Array<{}>;
@@ -49,8 +49,7 @@ export class AdvancedtableComponent implements OnInit {
     private formBuilder: FormBuilder,
     private companyService: CompanyService,
     private toastService: ToastrService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.breadCrumbItems = [
@@ -185,7 +184,6 @@ export class AdvancedtableComponent implements OnInit {
     this.hideme[i] = !this.hideme[i];
     this._fetchDataSeat(i, id);
     console.log(this.hideme[i]);
-
   }
 
   _fetchData() {
@@ -264,7 +262,10 @@ export class AdvancedtableComponent implements OnInit {
    * Open modal
    * @param contentSeat modal content
    */
+  disableUpdate: boolean;
   openModalSeat(contentSeat?: any, checkEdit?: boolean, item?: any) {
+    this.submitted = false;
+    this.disableUpdate = checkEdit;
     this.titleSeat = !checkEdit ? "Add Seat" : "Update Seat";
     this.modalService.open(contentSeat);
     if (checkEdit) {
@@ -293,6 +294,7 @@ export class AdvancedtableComponent implements OnInit {
    * @param content modal content
    */
   openModal(content?: any, checkEdit?: boolean, item?: any) {
+    this.submitted = false;
     console.log(item);
     this.title = !checkEdit ? "Add Vehicle" : "Update Vehicle";
     this.modalService.open(content);

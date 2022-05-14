@@ -70,7 +70,7 @@ export class CustomersComponent implements OnInit {
     this.companyService.getCompany().subscribe((data: any) => {
       this.customersData = data.companies;
       this.totalPage = data.count;
-      this.loading=false;
+      this.loading = false;
     });
   }
 
@@ -91,7 +91,7 @@ export class CustomersComponent implements OnInit {
   }
 
   getPageCompany(event): void {
-    this.loading =true;
+    this.loading = true;
     this.currentpage = event;
     this.companyService.getCompany(event).subscribe((data: any) => {
       this.customersData = data.companies;
@@ -101,7 +101,7 @@ export class CustomersComponent implements OnInit {
 
   saveCompany() {
     const id = this.formData.value.id;
-    if (id !== undefined) {
+    if (id !== undefined && id !== null) {
       this.updateCompany(id);
     } else {
       this.createCompany();
@@ -158,6 +158,7 @@ export class CustomersComponent implements OnInit {
    * @param content modal content
    */
   openModal(content: any, checkEdit, item?: any) {
+    this.submitted = false;
     console.log(item);
     this.title = !checkEdit ? "Add company" : "Update company";
     this.modalService.open(content);
@@ -186,10 +187,10 @@ export class CustomersComponent implements OnInit {
     this.router.navigateByUrl("ecommerce/product-detail/1");
   }
 
-  searchCompany():void{
-    const company={
-      value:this.term
-    }
+  searchCompany(): void {
+    const company = {
+      value: this.term,
+    };
 
     this.modelChanged.next(company);
   }

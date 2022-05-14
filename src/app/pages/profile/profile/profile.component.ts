@@ -20,6 +20,7 @@ export class ProfileComponent implements OnInit {
   revenueBarChart: ChartType;
   statData;
   typesubmit: boolean;
+  typesubmit1: boolean;
   FormPassword: FormGroup;
   FormProfile: FormGroup;
 
@@ -37,12 +38,12 @@ export class ProfileComponent implements OnInit {
         confirmpwd: ["", Validators.required],
       },
       {
-        validator: MustMatch("oldPassword", "confirmpwd"),
+        validator: MustMatch("newPassword", "confirmpwd"),
       }
     );
     this.typesubmit = false;
     this.FormProfile = this.formBuilder.group({
-      email: ["", Validators.required],
+      name: ["", Validators.required],
     });
     this.typesubmit = false;
     this.breadCrumbItems = [
@@ -55,12 +56,12 @@ export class ProfileComponent implements OnInit {
   }
 
   typeSubmit() {
-    this.typesubmit = true;
+    this.typesubmit1 = true;
     const password = {
-      oldPassword:this.FormPassword.get('oldPassword').value,
-      newPassword:this.FormPassword.get('newPassword').value,
-    }
-    this.profileService.savePassword(password).subscribe(
+      oldPassword: this.FormPassword.get("oldPassword").value,
+      newPassword: this.FormPassword.get("newPassword").value,
+    };
+    this.profileService.updatePassword(password).subscribe(
       (data) => {
         this.toastrService.success("Update password success");
       },
@@ -72,7 +73,7 @@ export class ProfileComponent implements OnInit {
 
   submitProfile() {
     this.typesubmit = true;
-    this.profileService.saveProfile(this.FormProfile).subscribe(
+    this.profileService.updateProfile(this.FormProfile.value).subscribe(
       (data) => {
         this.toastrService.success("Update profile success");
       },

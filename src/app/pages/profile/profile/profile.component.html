@@ -61,7 +61,7 @@
                 >
                 <div class="col-sm-9">
                   <input
-                    type="email"
+                    type="password"
                     class="form-control"
                     id="horizontal-email-input"
                     autocomplete="current-password"
@@ -84,17 +84,17 @@
                     autocomplete="new-password"
                     formControlName="newPassword"
                     [ngClass]="{
-                      'is-invalid': typesubmit && type.password.errors
+                      'is-invalid': typesubmit && type.password?.errors
                     }"
                   />
                   <div
-                    *ngIf="typesubmit && type.password.errors"
+                    *ngIf="typesubmit && type.password?.errors"
                     class="invalid-feedback"
                   >
-                    <span *ngIf="type.password.errors.required"
+                    <span *ngIf="type.password?.errors.required"
                       >This value is required.</span
                     >
-                    <span *ngIf="type.password.errors.minlength"
+                    <span *ngIf="type.password?.errors.minlength"
                       >Password must be at least 6 characters.</span
                     >
                   </div>
@@ -113,17 +113,17 @@
                     placeholder="Re-Type Password"
                     formControlName="confirmpwd"
                     [ngClass]="{
-                      'is-invalid': typesubmit && type.confirmpwd.errors
+                      'is-invalid': typesubmit1 && type?.confirmpwd.errors
                     }"
                   />
                   <div
-                    *ngIf="typesubmit && type.confirmpwd.errors"
+                    *ngIf="typesubmit1 && type.confirmpwd?.errors"
                     class="invalid-feedback"
                   >
-                    <span *ngIf="type.confirmpwd.errors.required"
+                    <span *ngIf="type.confirmpwd?.errors.required"
                       >This value is required.</span
                     >
-                    <span *ngIf="type.confirmpwd.errors.mustMatch"
+                    <span *ngIf="type.confirmpwd?.errors.mustMatch"
                       >This value should be the same.</span
                     >
                   </div>
@@ -133,11 +133,7 @@
               <div class="row justify-content-end">
                 <div class="col-sm-9">
                   <div>
-                    <button
-                      [disabled]="!FormPassword.valid"
-                      type="submit"
-                      class="btn btn-primary w-md"
-                    >
+                    <button type="submit" class="btn btn-primary w-md">
                       Save
                     </button>
                   </div>

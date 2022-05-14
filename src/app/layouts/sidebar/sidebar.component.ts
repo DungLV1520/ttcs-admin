@@ -16,6 +16,7 @@ import { HttpClient } from "@angular/common/http";
 import { MENU } from "./menu";
 import { MenuItem } from "./menu.model";
 import { TranslateService } from "@ngx-translate/core";
+import { ProfileService } from "./sidebar.service";
 
 @Component({
   selector: "app-sidebar",

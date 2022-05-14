@@ -8,6 +8,7 @@ import { Customers } from "./customers.model";
 import { province } from "./trips";
 import { ToastrService } from "ngx-toastr";
 import * as moment from "moment";
+import { CompanyService } from "../../company/company.service";
 
 @Component({
   selector: "app-customer-trip",
@@ -27,6 +28,8 @@ export class CustomerTripComponent implements OnInit {
   stationService: any;
   idDelete: string;
   customerDataVehicle: any;
+  customerDataCompany: any;
+
   _number: number;
   loading: boolean = true;
   from: number;
@@ -39,7 +42,8 @@ export class CustomerTripComponent implements OnInit {
     private router: Router,
     private tripService: TripService,
     private vehicleService: VehicleService,
-    private toastService: ToastrService
+    private toastService: ToastrService,
+    private companyService: CompanyService
   ) {}
 
   ngOnInit() {
@@ -52,13 +56,15 @@ export class CustomerTripComponent implements OnInit {
       guestCapacity: ["", Validators.required],
       startTime: ["", [Validators.required]],
       vehicle: ["", Validators.required],
+      company: ["", Validators.required],
       price: ["", [Validators.required]],
     });
 
     this.currentpage = 1;
     this._fetchData();
     this._province();
-    this._fetchDataVehicle();
+    // this._fetchDataVehicle();
+    this._fetchDataCompany();
   }
 
   private _province() {
@@ -72,9 +78,24 @@ export class CustomerTripComponent implements OnInit {
     });
   }
 
-  private _fetchDataVehicle() {
-    this.vehicleService.getVehicle().subscribe((data: any) => {
-      this.customerDataVehicle = data.vehicles;
+  // private _fetchDataVehicle() {
+  //   this.vehicleService.getVehicle().subscribe((data: any) => {
+  //     this.customerDataVehicle = data.vehicles;
+  //   });
+  // }
+
+  private _fetchDataCompany() {
+    this.companyService.getCompany().subscribe((data: any) => {
+      this.customerDataCompany = data.companies;
+    });
+  }
+
+  getVehicleFromCompany(event?: any) {
+    this.formData.patchValue({
+      vehicle: "",
+    });
+    this.customerDataVehicle = event.vehicles.filter((data) => {
+      return data.isCreatedTrip === false;
     });
   }
 
@@ -84,6 +105,7 @@ export class CustomerTripComponent implements OnInit {
       guestCapacity: this._number,
     });
   }
+
   get form() {
     return this.formData.controls;
   }
@@ -99,7 +121,9 @@ export class CustomerTripComponent implements OnInit {
 
   saveCustomer() {
     const id = this.formData.value.id;
-    if (id !== undefined) {
+    console.log(id);
+
+    if (id !== undefined && id !== null) {
       this.updateTrip(id);
     } else {
       this.creatTrip();
@@ -108,6 +132,8 @@ export class CustomerTripComponent implements OnInit {
   }
 
   creatTrip() {
+    console.log(this.formData);
+
     if (this.formData.valid) {
       this.tripService.creatTrip(this.formData?.value).subscribe(
         (data) => {
@@ -156,6 +182,8 @@ export class CustomerTripComponent implements OnInit {
    * @param content modal content
    */
   openModal(content?: any, checkEdit?: boolean, item?: any) {
+    this.customerDataVehicle = item?.vehicle;
+    this.submitted = false;
     this.title = !checkEdit ? "Add Trip" : "Update Trip";
     this.modalService.open(content);
     if (checkEdit) {
@@ -163,9 +191,10 @@ export class CustomerTripComponent implements OnInit {
         id: item._id,
         from: item.from,
         to: item.to,
+        company: item.company?._id,
         guestCapacity: item.guestCapacity,
         vehicle: item.vehicle?._id,
-        startTime: moment(item.startTime).format(),
+        startTime: moment(item.startTime),
         price: item.price,
       });
     } else {
@@ -209,7 +238,7 @@ export class CustomerTripComponent implements OnInit {
   }
 
   searchTrip(): void {
-    this.loading= true;
+    this.loading = true;
     console.log(this.from);
     console.log(this.to);
     console.log(this.startTime);
@@ -217,14 +246,15 @@ export class CustomerTripComponent implements OnInit {
       const objTrips = {
         from: this.from,
         to: this.to,
-        startTime: moment(this.startTime).subtract(1, 'months').format('YYYY-MM-DD'),
+        startTime: moment(this.startTime)
+          .subtract(1, "months")
+          .format("YYYY-MM-DD"),
       };
       this.tripService.searchTrip(objTrips).subscribe((data: any) => {
         this.customersData = data.filterd;
         this.loading = false;
       });
-    }
-    else{
+    } else {
       this._fetchData();
     }
   }

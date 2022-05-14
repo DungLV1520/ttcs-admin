@@ -83,7 +83,7 @@ export class CustomersComponent implements OnInit {
 
   saveCustomer() {
     const id = this.formData.value.id;
-    if (id !== undefined&&id!== null) {
+    if (id !== undefined && id !== null) {
       this.updateUser(id);
     } else {
       this.creatUser();
@@ -123,15 +123,15 @@ export class CustomersComponent implements OnInit {
     }
   }
 
-  deleteTrip() {
+  deleteUser() {
     console.log(this.idDelete);
     this.userService.deleteUser(this.idDelete).subscribe(
       (data) => {
-        this.toastService.success("Delete station success!");
+        this.toastService.success("Delete user success!");
         this._fetchData();
       },
       (err) => {
-        this.toastService.error("Delete station failed!");
+        this.toastService.error("Delete user failed!");
       }
     );
     this.modalService.dismissAll();
