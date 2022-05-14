@@ -83,7 +83,7 @@ export class CustomersComponent implements OnInit {
 
   saveCustomer() {
     const id = this.formData.value.id;
-    if (id !== undefined) {
+    if (id !== undefined&&id!== null) {
       this.updateUser(id);
     } else {
       this.creatUser();

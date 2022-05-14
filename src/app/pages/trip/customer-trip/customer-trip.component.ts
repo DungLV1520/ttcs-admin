@@ -209,6 +209,7 @@ export class CustomerTripComponent implements OnInit {
   }
 
   searchTrip(): void {
+    this.loading= true;
     console.log(this.from);
     console.log(this.to);
     console.log(this.startTime);
@@ -216,10 +217,11 @@ export class CustomerTripComponent implements OnInit {
       const objTrips = {
         from: this.from,
         to: this.to,
-        startTime: moment(this.startTime).format(),
+        startTime: moment(this.startTime).subtract(1, 'months').format('YYYY-MM-DD'),
       };
       this.tripService.searchTrip(objTrips).subscribe((data: any) => {
-        this.customersData = data.trips;
+        this.customersData = data.filterd;
+        this.loading = false;
       });
     }
     else{

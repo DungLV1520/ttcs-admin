@@ -1,4 +1,4 @@
-<div class="container-fluid" style ="position:relative">
+<div class="container-fluid" style="position: relative">
   <div
     class="spinner-border text-info m-1"
     role="status"
@@ -70,7 +70,7 @@
                     <p class="mb-0">{{ customers.email }}</p>
                   </td>
 
-                  <td>{{ customers.isAdmin }}</td>
+                  <td>{{ customers.isAdmin ? "Admin" : "User" }}</td>
                   <td style="text-align: center">
                     <div class="dropdown" ngbDropdown placement="bottom-right">
                       <a
@@ -240,6 +240,8 @@
     >
       Cancel
     </button>
-    <button (click)="deleteTrip()"type="button" class="btn btn-primary">OK</button>
+    <button (click)="deleteTrip()" type="button" class="btn btn-primary">
+      OK
+    </button>
   </div>
 </ng-template>
