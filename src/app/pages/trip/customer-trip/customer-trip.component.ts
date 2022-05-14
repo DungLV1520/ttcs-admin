@@ -194,7 +194,7 @@ export class CustomerTripComponent implements OnInit {
         company: item.company?._id,
         guestCapacity: item.guestCapacity,
         vehicle: item.vehicle?._id,
-        startTime: moment(item.startTime),
+        startTime: moment(item.startTime).toISOString().substring(0, 10),
         price: item.price,
       });
     } else {

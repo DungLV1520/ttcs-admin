@@ -1,4 +1,12 @@
-<div class="container-fluid">
+<div class="container-fluid" style="position: relative">
+  <div
+    class="spinner-border text-info m-1"
+    role="status"
+    *ngIf="loading"
+    style="position: absolute; top: -3%; left: 7%"
+  >
+    <span class="sr-only">Loading...</span>
+  </div>
   <app-page-title
     title="Ticket"
     [breadcrumbItems]="breadCrumbItems"
@@ -47,7 +55,7 @@
                     }}</a>
                   </td>
                   <td>{{ data.user?.email }}</td>
-                  <td>{{ data.amountPaid }}</td>
+                  <td>{{ data.amountPaid | currency: "":"":"1.0" }}</td>
                   <td>
                     <div *ngFor="let item of data.seat">
                       <p class="mb-1">{{ item.sku }}</p>
