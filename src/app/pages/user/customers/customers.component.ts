@@ -16,15 +16,16 @@ export class CustomersComponent implements OnInit {
   modelChanged = new Subject<any>();
   breadCrumbItems: Array<{}>;
   formData: FormGroup;
+  formSearch: FormGroup;
   submitted = false;
   customersData: Customers[];
-  term: any;
   title!: string;
   currentpage: number;
   selectValue: any[];
   totalPage: number;
   idDelete: string;
   loading: boolean = true;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -44,6 +45,11 @@ export class CustomersComponent implements OnInit {
         name: "Admin",
       },
     ];
+
+    this.formSearch = this.formBuilder.group({
+      value: [""],
+    });
+
     this.formData = this.formBuilder.group({
       id: [""],
       name: ["", [Validators.required]],
@@ -61,10 +67,12 @@ export class CustomersComponent implements OnInit {
     this.currentpage = 1;
     this._fetchData();
     this.modelChanged
-      .pipe(debounceTime(1000), distinctUntilChanged())
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe((model) => {
+        this.loading = true;
         this.userService.searchUser(model).subscribe((data: any) => {
           this.customersData = data.users;
+          this.loading = false;
         });
       });
   }
@@ -92,7 +100,6 @@ export class CustomersComponent implements OnInit {
   }
 
   creatUser() {
-    console.log(this.formData.value);
     this.formData.value.isAdmin = true;
     if (this.formData.valid) {
       this.userService.createUser(this.formData.value).subscribe(
@@ -124,7 +131,6 @@ export class CustomersComponent implements OnInit {
   }
 
   deleteUser() {
-    console.log(this.idDelete);
     this.userService.deleteUser(this.idDelete).subscribe(
       (data) => {
         this.toastService.success("Delete user success!");
@@ -147,13 +153,16 @@ export class CustomersComponent implements OnInit {
     });
   }
 
+  searchUser(): void {
+    this.modelChanged.next(this.formSearch.value);
+  }
+
   /**
    * Open modal
    * @param content modal content
    */
 
   openModal(content?: any, checkEdit?: boolean, item?: any) {
-    console.log(item);
     this.title = !checkEdit ? "Add User" : "Update User";
     this.modalService.open(content);
     if (checkEdit) {
@@ -176,12 +185,5 @@ export class CustomersComponent implements OnInit {
   openModalDelete(contentdelete: any, id: string) {
     this.idDelete = id;
     this.modalService.open(contentdelete);
-  }
-
-  searchUser(): void {
-    const user = {
-      value: this.term,
-    };
-    this.modelChanged.next(user);
   }
 }

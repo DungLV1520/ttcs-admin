@@ -38,8 +38,6 @@ export class OrdersComponent implements OnInit {
   dataItem: any;
   openModal(content: any, dataItem: any) {
     this.dataItem = dataItem;
-    console.log(this.dataItem);
-
     this.modalService.open(content, { centered: true });
   }
   totalPage: number;
@@ -53,7 +51,6 @@ export class OrdersComponent implements OnInit {
   }
 
   deleteStation() {
-    console.log(this.idDelete);
     this.ticketService.deleteTicket(this.idDelete).subscribe(
       (data) => {
         this.toastService.success("Delete ticket success!");

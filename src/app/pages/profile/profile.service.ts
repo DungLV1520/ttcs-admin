@@ -8,9 +8,6 @@ export class ProfileService {
   constructor(private http: HttpClient) {}
 
   updateProfile(profile: any) {
-    console.log(profile);
-    console.log("aaa");
-
     return this.http.put(`${this.SERVER_URL}/users/update`, profile);
   }
 

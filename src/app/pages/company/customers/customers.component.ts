@@ -18,10 +18,10 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 export class CustomersComponent implements OnInit {
   modelChanged = new Subject<any>();
   breadCrumbItems: Array<{}>;
+  formSearch: FormGroup;
   formData: FormGroup;
   submitted = false;
   customersData: Customers[];
-  term: any;
   title!: string;
   currentpage: number;
   totalPage: number;
@@ -29,14 +29,15 @@ export class CustomersComponent implements OnInit {
   stationsData: any;
   vehicleData: any;
   loading: boolean = true;
+
   constructor(
-    private modalService: NgbModal,
-    private formBuilder: FormBuilder,
-    private router: Router,
     private companyService: CompanyService,
-    private toastService: ToastrService,
     private stationService: StationService,
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private toastService: ToastrService,
+    private formBuilder: FormBuilder,
+    private modalService: NgbModal,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -53,15 +54,21 @@ export class CustomersComponent implements OnInit {
       description: ["", [Validators.required]],
     });
 
+    this.formSearch = this.formBuilder.group({
+      value: [""],
+    });
+
     this.currentpage = 1;
     this._fetchData();
     this._fetchStation();
     this._fetchVehcle();
     this.modelChanged
-      .pipe(debounceTime(1000), distinctUntilChanged())
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe((model) => {
+        this.loading = true;
         this.companyService.searchCompany(model).subscribe((data: any) => {
           this.customersData = data.companies;
+          this.loading = false;
         });
       });
   }
@@ -140,7 +147,6 @@ export class CustomersComponent implements OnInit {
   }
 
   deleteCompany() {
-    console.log(this.idDelete);
     this.companyService.deleteCompany(this.idDelete).subscribe(
       (data) => {
         this.toastService.success("Delete company success!");
@@ -153,13 +159,21 @@ export class CustomersComponent implements OnInit {
     this.modalService.dismissAll();
     this.submitted = true;
   }
+
+  navigateStation(): void {
+    this.router.navigateByUrl("ecommerce/product-detail/1");
+  }
+
+  searchCompany(): void {
+    this.modelChanged.next(this.formSearch.value);
+  }
+
   /**
    * Open modal
    * @param content modal content
    */
   openModal(content: any, checkEdit, item?: any) {
     this.submitted = false;
-    console.log(item);
     this.title = !checkEdit ? "Add company" : "Update company";
     this.modalService.open(content);
     if (checkEdit) {
@@ -182,16 +196,5 @@ export class CustomersComponent implements OnInit {
   openModalDelete(contentdelete: any, id: string) {
     this.idDelete = id;
     this.modalService.open(contentdelete);
-  }
-  navigateStation(): void {
-    this.router.navigateByUrl("ecommerce/product-detail/1");
-  }
-
-  searchCompany(): void {
-    const company = {
-      value: this.term,
-    };
-
-    this.modelChanged.next(company);
   }
 }

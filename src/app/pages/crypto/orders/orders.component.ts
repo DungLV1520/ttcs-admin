@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -8,7 +7,7 @@ import { StationService } from "../../station/station.service";
 import { VehicleService } from "../../vehicle/vehicle.service";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { SeatService } from './orders.service';
+import { SeatService } from "./orders.service";
 
 @Component({
   selector: "app-orders",
@@ -30,24 +29,27 @@ export class OrdersComponent implements OnInit {
   stationsData: any;
   vehicleData: any;
   loading: boolean = true;
+  formSearch: FormGroup;
+
   constructor(
-    private modalService: NgbModal,
-    private toastService: ToastrService,
-    private seatService: SeatService
+    private seatService: SeatService,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
-    this.breadCrumbItems = [
-      { label: "Seat" },
-      { label: "List", active: true },
-    ];
+    this.breadCrumbItems = [{ label: "Seat" }, { label: "List", active: true }];
+
+    this.formSearch = this.formBuilder.group({
+      type: [""],
+      // status: [""],
+    });
 
     this.currentpage = 1;
     this._fetchData();
   }
 
   getPageSeat(event): void {
-    this.loading =true;
+    this.loading = true;
     this.currentpage = event;
     this.seatService.getSeat(event).subscribe((data: any) => {
       this.customersData = data.seats;
@@ -58,8 +60,15 @@ export class OrdersComponent implements OnInit {
     this.seatService.getSeat().subscribe((data: any) => {
       this.customersData = data.seats;
       this.totalPage = data.count;
-      this.loading=false;
+      this.loading = false;
     });
   }
-}
 
+  searchSeat(): void {
+    this.seatService
+      .searchSeat(this.formSearch.value)
+      .subscribe((data: any) => {
+        this.customersData = data.seats;
+      });
+  }
+}

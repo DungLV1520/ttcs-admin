@@ -121,8 +121,6 @@ export class CustomerTripComponent implements OnInit {
 
   saveCustomer() {
     const id = this.formData.value.id;
-    console.log(id);
-
     if (id !== undefined && id !== null) {
       this.updateTrip(id);
     } else {
@@ -132,8 +130,6 @@ export class CustomerTripComponent implements OnInit {
   }
 
   creatTrip() {
-    console.log(this.formData);
-
     if (this.formData.valid) {
       this.tripService.creatTrip(this.formData?.value).subscribe(
         (data) => {
@@ -186,7 +182,6 @@ export class CustomerTripComponent implements OnInit {
       .getVehicleByIDCompany(item.company?._id)
       .subscribe((data: any) => {
         this.customerDataVehicle = data?.vehicles;
-        console.log(data);
       });
     this.submitted = false;
     this.title = !checkEdit ? "Add Trip" : "Update Trip";
@@ -244,9 +239,6 @@ export class CustomerTripComponent implements OnInit {
 
   searchTrip(): void {
     this.loading = true;
-    console.log(this.from);
-    console.log(this.to);
-    console.log(this.startTime);
     if (this.from && this.to) {
       const objTrips = {
         from: this.from,

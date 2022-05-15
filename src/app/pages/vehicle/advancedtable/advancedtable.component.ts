@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChildren, QueryList } from "@angular/core";
 import { DecimalPipe } from "@angular/common";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import {
   AdvancedSortableDirective,
   SortEvent,
@@ -10,6 +10,7 @@ import { VehicleService } from "../vehicle.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { CompanyService } from "../../company/company.service";
 import { ToastrService } from "ngx-toastr";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 @Component({
   selector: "app-advancedtable",
@@ -18,6 +19,7 @@ import { ToastrService } from "ngx-toastr";
   providers: [DecimalPipe],
 })
 export class AdvancedtableComponent implements OnInit {
+  modelChanged = new Subject<any>();
   breadCrumbItems: Array<{}>;
   typeSeat: Array<{}>;
   tableData: any[];
@@ -33,6 +35,7 @@ export class AdvancedtableComponent implements OnInit {
   headers: QueryList<AdvancedSortableDirective>;
   public isCollapsed = true;
   formData: FormGroup;
+  formSearch: FormGroup;
   formSeat: FormGroup;
   submitted = false;
   companyItem: any;
@@ -43,6 +46,8 @@ export class AdvancedtableComponent implements OnInit {
   idSeat: string;
   indexSeat: string;
   idTable: string;
+  disableUpdate: boolean;
+
   constructor(
     private modalService: NgbModal,
     private vehicleService: VehicleService,
@@ -72,14 +77,31 @@ export class AdvancedtableComponent implements OnInit {
       type: ["", [Validators.required]],
     });
 
+    this.formSearch = this.formBuilder.group({
+      name: [""],
+    });
+
     this.currentpage = 1;
     this._fetchData();
     this.getCompany();
+
+    this.modelChanged
+      .pipe(debounceTime(500), distinctUntilChanged())
+      .subscribe((model) => {
+        this.loading = true;
+        if (model.name !== "") {
+          this.vehicleService.searchVehicle(model).subscribe((data: any) => {
+            this.tableData = data.vehicles;
+            this.loading = false;
+          });
+        } else {
+          this._fetchData();
+        }
+      });
   }
 
   getCompany() {
     this.companyService.getCompany().subscribe((company: any) => {
-      console.log(company);
       this.companyItem = company.companies;
     });
   }
@@ -94,7 +116,6 @@ export class AdvancedtableComponent implements OnInit {
 
   saveCustomer() {
     const id = this.formData.value.id;
-    console.log(id);
 
     if (id !== undefined && id !== null) {
       this.updateVehicle(id);
@@ -106,7 +127,6 @@ export class AdvancedtableComponent implements OnInit {
 
   saveSeats() {
     const id = this.formSeat.value.id;
-    console.log(id);
     if (id !== undefined && id !== null) {
       this.updateSeat(id);
     } else {
@@ -183,7 +203,6 @@ export class AdvancedtableComponent implements OnInit {
     this.idTable = id;
     this.hideme[i] = !this.hideme[i];
     this._fetchDataSeat(i, id);
-    console.log(this.hideme[i]);
   }
 
   _fetchData() {
@@ -197,7 +216,6 @@ export class AdvancedtableComponent implements OnInit {
   _fetchDataSeat(id: string, tableId: string) {
     this.loading = true;
     this.vehicleService.getVehicleSeatID(tableId).subscribe((data: any) => {
-      console.log(data);
       this.editableTable[id] = data;
       this.loading = false;
     });
@@ -245,6 +263,10 @@ export class AdvancedtableComponent implements OnInit {
     });
   }
 
+  searchVehicle(): void {
+    this.modelChanged.next(this.formSearch.value);
+  }
+
   /**
    * Sort table data
    * @param param0 sort the column
@@ -262,7 +284,6 @@ export class AdvancedtableComponent implements OnInit {
    * Open modal
    * @param contentSeat modal content
    */
-  disableUpdate: boolean;
   openModalSeat(contentSeat?: any, checkEdit?: boolean, item?: any) {
     this.submitted = false;
     this.disableUpdate = checkEdit;
@@ -295,7 +316,6 @@ export class AdvancedtableComponent implements OnInit {
    */
   openModal(content?: any, checkEdit?: boolean, item?: any) {
     this.submitted = false;
-    console.log(item);
     this.title = !checkEdit ? "Add Vehicle" : "Update Vehicle";
     this.modalService.open(content);
     if (checkEdit) {

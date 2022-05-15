@@ -24,6 +24,7 @@ export class TopbarComponent implements OnInit {
   countryName;
   valueset;
   account: any;
+  checkLogoText: boolean = false;
 
   constructor(
     @Inject(DOCUMENT) private document: any,
@@ -87,6 +88,7 @@ export class TopbarComponent implements OnInit {
    */
   toggleMobileMenu(event: any) {
     event.preventDefault();
+    this.checkLogoText = !this.checkLogoText;
     this.mobileMenuButtonClicked.emit();
   }
 

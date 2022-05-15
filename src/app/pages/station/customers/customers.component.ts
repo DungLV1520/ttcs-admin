@@ -21,13 +21,14 @@ export class CustomersComponent implements OnInit {
   formSearch: FormGroup;
   submitted = false;
   customersData: Customers[];
-  term: any;
   title!: string;
   currentpage: number;
   idDelete: string;
   comapnyItem: any;
+  companyArrays: any;
   loading: boolean = true;
   public totalPage: number;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -49,6 +50,7 @@ export class CustomersComponent implements OnInit {
       address: ["", [Validators.required]],
       company: [""],
     });
+
     this.formSearch = this.formBuilder.group({
       value: [""],
     });
@@ -57,8 +59,9 @@ export class CustomersComponent implements OnInit {
     this._fetchData();
     this.getCompany();
     this.modelChanged
-      .pipe(debounceTime(1000), distinctUntilChanged())
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe((model) => {
+        this.loading = true;
         this.stationService.searchStation(model).subscribe((data: any) => {
           this.customersData = data.stations;
           this.totalPage = data.count;
@@ -69,7 +72,6 @@ export class CustomersComponent implements OnInit {
 
   getCompany() {
     this.companyService.getCompany().subscribe((company: any) => {
-      console.log(company);
       this.comapnyItem = company.companies;
     });
   }
@@ -88,7 +90,6 @@ export class CustomersComponent implements OnInit {
 
   saveStation() {
     const id = this.formData.value.id;
-    console.log(id);
     if (id !== undefined && id !== null) {
       this.updateStation(id);
     } else {
@@ -128,7 +129,6 @@ export class CustomersComponent implements OnInit {
   }
 
   deleteStation() {
-    console.log(this.idDelete);
     this.stationService.deleteStation(this.idDelete).subscribe(
       (data) => {
         this.toastService.success("Delete station success!");
@@ -154,20 +154,24 @@ export class CustomersComponent implements OnInit {
   public getNameCompany(id: string) {
     for (let i = 0; i < this.comapnyItem.length; i++) {
       if (this.comapnyItem[i]._id === id) {
-        console.log(this.comapnyItem[i].name);
-
         return this.comapnyItem[i].name;
       }
     }
+  }
+
+  navigateDetail(): void {
+    this.router.navigateByUrl("product-detail/1");
+  }
+
+  searchStation(): void {
+    this.modelChanged.next(this.formSearch.value);
   }
 
   /**
    * Open modal
    * @param content modal content
    */
-  companyArrays: any;
   openModal(content?: any, checkEdit?: boolean, item?: any) {
-    console.log(this.companyArrays);
     // this.comapnyItem = item.company;
 
     this.submitted = false;
@@ -192,13 +196,5 @@ export class CustomersComponent implements OnInit {
   openModalDelete(contentdelete: any, id: string) {
     this.idDelete = id;
     this.modalService.open(contentdelete);
-  }
-
-  navigateDetail(): void {
-    this.router.navigateByUrl("product-detail/1");
-  }
-
-  searchStation(): void {
-    this.modelChanged.next(this.formSearch.value);
   }
 }

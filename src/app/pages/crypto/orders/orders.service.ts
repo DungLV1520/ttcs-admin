@@ -10,4 +10,8 @@ export class SeatService {
   getSeat(page?: number) {
     return this.http.get(`${this.SERVER_URL}/seats/all?pageNumber=${page}`);
   }
+
+  searchSeat(seat: any) {
+    return this.http.post(`${this.SERVER_URL}/seats/search`, seat);
+  }
 }

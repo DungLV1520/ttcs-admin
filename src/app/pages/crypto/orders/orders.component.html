@@ -16,17 +16,24 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <form>
+          <form [formGroup]="formSearch" (ngSubmit)="searchSeat()">
             <div class="row">
-              <div class="col-3">
+              <!-- <div class="col-3">
                 <div class="mb-0">
                   <label>Status</label>
-                  <select class="form-control select2-search-disable">
-                    <option value="CO" selected>Booked</option>
-                    <option value="PE">Empty</option>
+                  <select
+                    class="form-control select2-search-disable"
+                    formControlName="status"
+                  >
+                    <option
+                      *ngFor="let status of [true, false]"
+                      [value]="status"
+                    >
+                      {{ status ? "Booked" : "Empty" }}
+                    </option>
                   </select>
                 </div>
-              </div>
+              </div> -->
               <div class="col-3">
                 <div class="mb-0">
                   <label style="margin-top: 13px"></label>
@@ -34,8 +41,7 @@
                     type="text"
                     class="form-control"
                     placeholder="Search..."
-                    [(ngModel)]="term"
-                    [ngModelOptions]="{ standalone: true }"
+                    formControlName="type"
                     style="position: relative"
                   />
                   <i
@@ -47,7 +53,7 @@
 
               <div class="col-xl col-sm-4 align-self-end">
                 <div class="mt-3">
-                  <button type="button" class="btn btn-primary w-md">
+                  <button type="submit" class="btn btn-primary w-md">
                     Search
                   </button>
                 </div>
