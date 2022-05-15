@@ -6,6 +6,8 @@ import { CompanyService } from "../../company/company.service";
 import { StationService } from "../station.service";
 import { Customers } from "./customers.model";
 import { ToastrService } from "ngx-toastr";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 @Component({
   selector: "app-customers",
@@ -13,8 +15,10 @@ import { ToastrService } from "ngx-toastr";
   styleUrls: ["./customers.component.scss"],
 })
 export class CustomersComponent implements OnInit {
+  modelChanged = new Subject<any>();
   breadCrumbItems: Array<{}>;
   formData: FormGroup;
+  formSearch: FormGroup;
   submitted = false;
   customersData: Customers[];
   term: any;
@@ -43,12 +47,24 @@ export class CustomersComponent implements OnInit {
       id: [""],
       name: ["", [Validators.required]],
       address: ["", [Validators.required]],
-      company: ["", [Validators.required]],
+      company: [""],
+    });
+    this.formSearch = this.formBuilder.group({
+      value: [""],
     });
 
     this.currentpage = 1;
     this._fetchData();
     this.getCompany();
+    this.modelChanged
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe((model) => {
+        this.stationService.searchStation(model).subscribe((data: any) => {
+          this.customersData = data.stations;
+          this.totalPage = data.count;
+          this.loading = false;
+        });
+      });
   }
 
   getCompany() {
@@ -180,5 +196,9 @@ export class CustomersComponent implements OnInit {
 
   navigateDetail(): void {
     this.router.navigateByUrl("product-detail/1");
+  }
+
+  searchStation(): void {
+    this.modelChanged.next(this.formSearch.value);
   }
 }

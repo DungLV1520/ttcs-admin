@@ -182,7 +182,11 @@ export class CustomerTripComponent implements OnInit {
    * @param content modal content
    */
   openModal(content?: any, checkEdit?: boolean, item?: any) {
-    this.customerDataVehicle = item?.vehicle;
+    this.vehicleService
+      .getVehicleByIDCompany(item.vehicle?._id)
+      .subscribe((data: any) => {
+        this.customerDataVehicle = data?.vehicles;
+      });
     this.submitted = false;
     this.title = !checkEdit ? "Add Trip" : "Update Trip";
     this.modalService.open(content);

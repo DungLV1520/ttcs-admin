@@ -19,15 +19,18 @@
           <div class="row mb-2">
             <div class="col-sm-4">
               <div class="search-box me-2 mb-2 d-inline-block">
-                <div class="position-relative">
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Search..."
-                    [(ngModel)]="term"
-                  />
-                  <i class="bx bx-search-alt search-icon"></i>
-                </div>
+                <form [formGroup]="formSearch">
+                  <div class="position-relative">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Search..."
+                      formControlName="value"
+                      (keyup)="searchStation()"
+                    />
+                    <i class="bx bx-search-alt search-icon"></i>
+                  </div>
+                </form>
               </div>
             </div>
             <div class="col-sm-8">

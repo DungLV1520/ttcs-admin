@@ -3,12 +3,11 @@ import { HttpClient } from "@angular/common/http";
 
 @Injectable({ providedIn: "root" })
 export class SeatService {
-   SERVER_URL = "https://ttcs-booking-bus.herokuapp.com/api/v1";
+  SERVER_URL = "https://ttcs-booking.herokuapp.com/api/v1";
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
-  getSeat(page?:number) {
+  getSeat(page?: number) {
     return this.http.get(`${this.SERVER_URL}/seats/all?pageNumber=${page}`);
   }
 }

@@ -7,7 +7,7 @@ import { User } from "../../core/models/auth.models";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
-   SERVER_URL = "https://ttcs-booking-bus.herokuapp.com/api/v1";
+  SERVER_URL = "https://ttcs-booking.herokuapp.com/api/v1";
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
@@ -23,15 +23,17 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    return this.http.post<any>(`${this.SERVER_URL}/users/login`, { email, password }).pipe(
-      map((user) => {
-        if (user && user.token) {
-          localStorage.setItem("currentUser", JSON.stringify(user));
-          this.currentUserSubject.next(user);
-        }
-        return user;
-      })
-    );
+    return this.http
+      .post<any>(`${this.SERVER_URL}/users/login`, { email, password })
+      .pipe(
+        map((user) => {
+          if (user && user.token) {
+            localStorage.setItem("currentUser", JSON.stringify(user));
+            this.currentUserSubject.next(user);
+          }
+          return user;
+        })
+      );
   }
 
   logout() {
@@ -42,7 +44,6 @@ export class AuthService {
   register(user: User) {
     return this.http.post(`${this.SERVER_URL}/users/register`, user);
   }
-
 
   updateProfile(user: User) {
     return this.http.put(`${this.SERVER_URL}/users/update`, user);

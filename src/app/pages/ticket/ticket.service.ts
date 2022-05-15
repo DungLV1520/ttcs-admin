@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 
 @Injectable({ providedIn: "root" })
 export class TicketService {
-  SERVER_URL = "https://ttcs-booking-bus.herokuapp.com/api/v1";
+  SERVER_URL = "https://ttcs-booking.herokuapp.com/api/v1";
 
   constructor(private http: HttpClient) {}
 
