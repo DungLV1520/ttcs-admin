@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Customers } from "./customers/customers.model";
+import { Observable } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class CompanyService {
@@ -8,16 +9,27 @@ export class CompanyService {
 
   constructor(private http: HttpClient) {}
 
-  getCompany(page?: number) {
-    return this.http.get(`${this.SERVER_URL}/companies/all?pageNumber=${page}`);
+  getCompany(page?: number): Observable<HttpResponse<any>> {
+    return this.http.get(
+      `${this.SERVER_URL}/companies/all?pageNumber=${page}`,
+      {
+        observe: "response",
+      }
+    );
   }
 
-  createCompany(companies: any) {
-    return this.http.post(`${this.SERVER_URL}/companies`, companies);
+  createCompany(companies: any): Observable<HttpResponse<any>> {
+    return this.http.post(`${this.SERVER_URL}/companies`, companies, {
+      observe: "response",
+      responseType: "blob",
+    });
   }
 
-  updateCompany(companies: Customers, id: string) {
-    return this.http.put(`${this.SERVER_URL}/companies/${id}`, companies);
+  updateCompany(companies: any, id: string): Observable<HttpResponse<any>> {
+    return this.http.put(`${this.SERVER_URL}/companies/${id}`, companies, {
+      observe: "response",
+      responseType: "blob",
+    });
   }
 
   deleteCompany(id: string) {

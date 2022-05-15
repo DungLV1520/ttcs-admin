@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -16,6 +16,8 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
   styleUrls: ["./customers.component.scss"],
 })
 export class CustomersComponent implements OnInit {
+  private readonly MAX_FILE_SIZE = 5;
+  formImage: FormData;
   modelChanged = new Subject<any>();
   breadCrumbItems: Array<{}>;
   formSearch: FormGroup;
@@ -29,7 +31,7 @@ export class CustomersComponent implements OnInit {
   stationsData: any;
   vehicleData: any;
   loading: boolean = true;
-
+  checkShow?: boolean = false;
   constructor(
     private companyService: CompanyService,
     private stationService: StationService,
@@ -52,6 +54,7 @@ export class CustomersComponent implements OnInit {
       station: ["", [Validators.required]],
       vehicles: [""],
       description: ["", [Validators.required]],
+      image: [""],
     });
 
     this.formSearch = this.formBuilder.group({
@@ -75,7 +78,7 @@ export class CustomersComponent implements OnInit {
 
   private _fetchData() {
     this.companyService.getCompany().subscribe((data: any) => {
-      this.customersData = data.companies;
+      this.customersData = data.body.companies;
       this.totalPage = data.count;
       this.loading = false;
     });
@@ -118,7 +121,11 @@ export class CustomersComponent implements OnInit {
 
   createCompany() {
     if (this.formData.valid) {
-      this.companyService.createCompany(this.formData.value).subscribe(
+      this.formImage.append("description", this.formData.value.description);
+      this.formImage.append("name", this.formData.value.name);
+      this.formImage.append("station", this.formData.value.station);
+      this.formImage.append("vehicles", this.formData.value.vehicles);
+      this.companyService.createCompany(this.formImage).subscribe(
         (data) => {
           this.toastService.success("Create company success!");
           this._fetchData();
@@ -133,7 +140,11 @@ export class CustomersComponent implements OnInit {
 
   updateCompany(id: string) {
     if (this.formData.valid) {
-      this.companyService.updateCompany(this.formData.value, id).subscribe(
+      this.formImage.append("description", this.formData.value.description);
+      this.formImage.append("name", this.formData.value.name);
+      this.formImage.append("station", this.formData.value.station);
+      this.formImage.append("vehicles", this.formData.value.vehicles);
+      this.companyService.updateCompany(this.formImage, id).subscribe(
         (data) => {
           this.toastService.success("Update company success!");
           this._fetchData();
@@ -168,11 +179,27 @@ export class CustomersComponent implements OnInit {
     this.modelChanged.next(this.formSearch.value);
   }
 
+  uploadImage($event: any) {
+    const files: File[] = Array.from($event.target.files);
+    this.formImage = new FormData();
+    let fileSize = 0;
+    for (const file of files) {
+      fileSize += file.size / 1024 / 1024;
+      if (fileSize > this.MAX_FILE_SIZE) {
+        this.toastService.error("File size exceeds 5MB");
+        return;
+      }
+      this.formImage.append("image", file, file.name);
+    }
+  }
+
   /**
    * Open modal
    * @param content modal content
    */
+  image: string;
   openModal(content: any, checkEdit, item?: any) {
+    this.image = item?.imageUrl;
     this.submitted = false;
     this.title = !checkEdit ? "Add company" : "Update company";
     this.modalService.open(content);
@@ -183,6 +210,7 @@ export class CustomersComponent implements OnInit {
         description: item.description,
         station: item.station._id,
         vehicles: item.vehicles[0]?._id,
+        image: item.imageKey,
       });
     } else {
       this.formData.reset();
@@ -196,5 +224,13 @@ export class CustomersComponent implements OnInit {
   openModalDelete(contentdelete: any, id: string) {
     this.idDelete = id;
     this.modalService.open(contentdelete);
+  }
+
+  @HostListener("document:click", ["$event"])
+  onclick(event) {
+    if (event.target.matches(".editor-div")) {
+      this.checkShow = !this.checkShow;
+      console.log("aaa");
+    }
   }
 }
