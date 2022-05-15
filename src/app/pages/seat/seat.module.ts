@@ -1,10 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-
 import { UIModule } from "../../shared/ui/ui.module";
-
 import { NgApexchartsModule } from "ng-apexcharts";
 import {
   NgbDropdownModule,
@@ -14,15 +11,11 @@ import {
   NgbTypeaheadModule,
   NgbDatepickerModule,
 } from "@ng-bootstrap/ng-bootstrap";
-
 import { ArchwizardModule } from "angular-archwizard";
 import { DropzoneModule } from "ngx-dropzone-wrapper";
 import { SimplebarAngularModule } from "simplebar-angular";
-
-import { CryptoRoutingModule } from "./crypto-routing.module";
-
+import { SeatRoutingModule } from "./seat-routing.module";
 import { OrderSortableService } from "./orders/orders-sortable.directive";
-
 import { OrdersComponent } from "./orders/orders.component";
 import { Ng5SliderModule } from "ng5-slider";
 
@@ -31,7 +24,7 @@ import { Ng5SliderModule } from "ng5-slider";
   imports: [
     CommonModule,
     UIModule,
-    CryptoRoutingModule,
+    SeatRoutingModule,
     NgbDropdownModule,
     NgApexchartsModule,
     FormsModule,
@@ -47,4 +40,4 @@ import { Ng5SliderModule } from "ng5-slider";
     Ng5SliderModule,
   ],
 })
-export class CryptoModule {}
+export class SeatModule {}

@@ -20,11 +20,10 @@ import { UIModule } from "../shared/ui/ui.module";
 import { PagesRoutingModule } from "./pages-routing.module";
 import { StationModule } from "./station/station.module";
 import { TripModule } from "./trip/trip.module";
-import { CryptoModule } from "./crypto/crypto.module";
+import { SeatModule } from "./seat/seat.module";
 import { ContactsModule } from "./profile/contacts.module";
 import { UiModule } from "./ui/ui.module";
 import { FormModule } from "./form/form.module";
-import { TablesModule } from "./tables/tables.module";
 import { IconsModule } from "./icons/icons.module";
 import { ChartModule } from "./chart/chart.module";
 import { MapsModule } from "./maps/maps.module";
@@ -50,14 +49,13 @@ FullCalendarModule.registerPlugins([
     PagesRoutingModule,
     NgApexchartsModule,
     ReactiveFormsModule,
-    CryptoModule,
+    SeatModule,
     StationModule,
     HttpClientModule,
     UIModule,
     ContactsModule,
     UiModule,
     FormModule,
-    TablesModule,
     IconsModule,
     ChartModule,
     MapsModule,
@@ -71,9 +69,8 @@ FullCalendarModule.registerPlugins([
     UserModule,
     TicketModule,
     CompanyModule,
-    VehicleModule
+    VehicleModule,
   ],
-  declarations: [
-  ],
+  declarations: [],
 })
 export class PagesModule {}
