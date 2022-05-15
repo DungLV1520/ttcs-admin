@@ -179,7 +179,7 @@ export class CustomerTripComponent implements OnInit {
    */
   openModal(content?: any, checkEdit?: boolean, item?: any) {
     this.vehicleService
-      .getVehicleByIDCompany(item.company?._id)
+      .getVehicleByIDCompany(item?.company?._id)
       .subscribe((data: any) => {
         this.customerDataVehicle = data?.vehicles;
       });

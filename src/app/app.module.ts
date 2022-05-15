@@ -14,12 +14,10 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import { CarouselModule } from "ngx-owl-carousel-o";
 import { ScrollToModule } from "@nicky-lenaers/ngx-scroll-to";
-import { SharedModule } from "./seat/shared/shared.module";
 import { ExtrapagesModule } from "./extrapages/extrapages.module";
 import { LayoutsModule } from "./layouts/layouts.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { SeatComponent } from "./seat/seat.component";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { ErrorInterceptor } from "./core/helpers/error.interceptor";
@@ -32,7 +30,7 @@ export function createTranslateLoader(http: HttpClient): any {
 }
 
 @NgModule({
-  declarations: [AppComponent, SeatComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -51,7 +49,6 @@ export function createTranslateLoader(http: HttpClient): any {
     NgbAccordionModule,
     NgbNavModule,
     NgbTooltipModule,
-    SharedModule,
     NgSelectModule,
     ScrollToModule.forRoot(),
     NgbModule,

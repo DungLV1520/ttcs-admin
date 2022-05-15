@@ -3,7 +3,6 @@ import { Routes, RouterModule } from "@angular/router";
 
 import { AuthGuard } from "./core/guards/auth.guard";
 import { LayoutComponent } from "./layouts/layout.component";
-import { SeatComponent } from "./seat/seat.component";
 import { Page404Component } from "./extrapages/page404/page404.component";
 
 const routes: Routes = [
@@ -24,7 +23,6 @@ const routes: Routes = [
     loadChildren: () =>
       import("./extrapages/extrapages.module").then((m) => m.ExtrapagesModule),
   },
-  { path: "crypto-ico-landing", component: SeatComponent },
   { path: "**", component: Page404Component },
 ];
 

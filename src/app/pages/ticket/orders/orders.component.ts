@@ -4,6 +4,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { TicketService } from "../ticket.service";
 import { ToastrService } from "ngx-toastr";
 import { province } from "../../trip/customer-trip/trips";
+import { VehicleService } from "../../vehicle/vehicle.service";
 
 @Component({
   selector: "app-orders",
@@ -19,11 +20,14 @@ export class OrdersComponent implements OnInit {
   title: string;
   currentpage: number;
   provinceData: any[] = [];
+  customerDataVehicle: any;
+
   constructor(
     private modalService: NgbModal,
     private router: Router,
     private ticketService: TicketService,
-    private toastService: ToastrService
+    private toastService: ToastrService,
+    private vehicleService: VehicleService
   ) {}
 
   ngOnInit() {
@@ -34,6 +38,7 @@ export class OrdersComponent implements OnInit {
     this.currentpage = 1;
     this._province();
     this._fetchData();
+    this._fetchDataVehicle();
   }
   dataItem: any;
   openModal(content: any, dataItem: any) {
@@ -41,7 +46,7 @@ export class OrdersComponent implements OnInit {
     this.modalService.open(content, { centered: true });
   }
   totalPage: number;
-  loading: boolean = false;
+  loading: boolean = true;
   private _fetchData() {
     this.ticketService.getTicket().subscribe((data: any) => {
       this.customersData = data.bookings;
@@ -75,6 +80,23 @@ export class OrdersComponent implements OnInit {
 
   navigateStation(): void {
     this.router.navigateByUrl("ticket/detail");
+  }
+
+  private _fetchDataVehicle() {
+    this.vehicleService.getVehicle().subscribe((data: any) => {
+      this.customerDataVehicle = data.vehicles;
+    });
+  }
+  guestIDVehicle(event: any): void {
+    this.loading = true;
+    console.log(event);
+    const objVehicle = {
+      vehicle: event._id,
+    };
+    this.ticketService.searchTicket(objVehicle).subscribe((data: any) => {
+      this.customersData = data.bookings;
+      this.loading = false;
+    });
   }
 
   /**

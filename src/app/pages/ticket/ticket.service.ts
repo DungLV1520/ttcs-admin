@@ -14,4 +14,8 @@ export class TicketService {
   deleteTicket(id: string) {
     return this.http.delete(`${this.SERVER_URL}/ticket/${id}`);
   }
+
+  searchTicket(vehicle: any) {
+    return this.http.post(`${this.SERVER_URL}/tickets/search`, vehicle);
+  }
 }

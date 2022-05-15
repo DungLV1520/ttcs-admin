@@ -30,6 +30,22 @@
                 </div>
               </div>
             </div>
+            <div class="col-sm-4">
+              <div
+                class="search-box me-2 mb-2 d-inline-block"
+                style="width: 80%"
+              >
+                <div class="position-relative">
+                  <ng-select
+                    placeholder="Enter vehicle"
+                    [items]="customerDataVehicle"
+                    bindLabel="name"
+                    bindValue="_id"
+                    (change)="guestIDVehicle($event)"
+                  ></ng-select>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Table data -->
