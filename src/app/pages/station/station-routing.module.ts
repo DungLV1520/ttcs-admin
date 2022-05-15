@@ -6,13 +6,12 @@ import { CustomersComponent } from "./customers/customers.component";
 
 const routes: Routes = [
   {
-    path: "product-detail/:id",
-    component: ProductdetailComponent,
-  },
-
-  {
     path: "customers",
     component: CustomersComponent,
+  },
+  {
+    path: "product-detail/:id",
+    component: ProductdetailComponent,
   },
 ];
 

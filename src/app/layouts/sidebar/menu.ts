@@ -11,7 +11,7 @@ export const MENU: MenuItem[] = [
     id: 12,
     label: "MENUITEMS.ECOMMERCE.TEXT",
     icon: "bx-store",
-    link: "/ecommerce/customers",
+    link: "/station/customers",
   },
   {
     id: 12,
@@ -42,7 +42,7 @@ export const MENU: MenuItem[] = [
     id: 21,
     label: "Seat",
     icon: "bx bx-album",
-    link: "/crypto/orders",
+    link: "/seat/orders",
   },
   {
     id: 48,

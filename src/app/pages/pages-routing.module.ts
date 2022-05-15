@@ -2,9 +2,9 @@ import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
 const routes: Routes = [
-  { path: "", redirectTo: "ecommerce/customers" },
+  { path: "", redirectTo: "station/customers" },
   {
-    path: "ecommerce",
+    path: "station",
     loadChildren: () =>
       import("./station/station.module").then((m) => m.StationModule),
   },
@@ -32,7 +32,7 @@ const routes: Routes = [
       import("./vehicle/vehicle.module").then((m) => m.VehicleModule),
   },
   {
-    path: "crypto",
+    path: "seat",
     loadChildren: () => import("./seat/seat.module").then((m) => m.SeatModule),
   },
   {
