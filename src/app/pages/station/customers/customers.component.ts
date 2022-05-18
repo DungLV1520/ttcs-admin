@@ -72,7 +72,7 @@ export class CustomersComponent implements OnInit {
 
   getCompany() {
     this.companyService.getCompany().subscribe((company: any) => {
-      this.comapnyItem = company.companies;
+      this.comapnyItem = company.body.companies;
     });
   }
 

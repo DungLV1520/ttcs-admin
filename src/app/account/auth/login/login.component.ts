@@ -6,20 +6,17 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { first } from "rxjs/operators";
 import { ToastrService } from "ngx-toastr";
 
-
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })
-
-
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   submitted = false;
   error = "";
   returnUrl: string;
-  loading:boolean = false;
+  loading: boolean = false;
 
   // set the currenr year
   year: number = new Date().getFullYear();
@@ -30,7 +27,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authFackservice: AuthService,
-    private toastr: ToastrService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -48,7 +45,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    this.loading=true;
+    this.loading = true;
     if (this.loginForm.invalid) {
       return;
     } else {
@@ -57,12 +54,12 @@ export class LoginComponent implements OnInit {
         .pipe(first())
         .subscribe(
           (data) => {
-            this.router.navigate(["/ecommerce/customers"]);
-            this.loading =false;
+            this.router.navigate(["/station/customers"]);
+            this.loading = false;
           },
           (error) => {
             this.error = error ? error : "";
-            this.loading =false;
+            this.loading = false;
           }
         );
     }

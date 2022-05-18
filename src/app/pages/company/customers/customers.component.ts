@@ -104,7 +104,7 @@ export class CustomersComponent implements OnInit {
     this.loading = true;
     this.currentpage = event;
     this.companyService.getCompany(event).subscribe((data: any) => {
-      this.customersData = data.companies;
+      this.customersData = data.body.companies;
       this.loading = false;
     });
   }

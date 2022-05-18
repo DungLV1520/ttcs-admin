@@ -102,7 +102,7 @@ export class AdvancedtableComponent implements OnInit {
 
   getCompany() {
     this.companyService.getCompany().subscribe((company: any) => {
-      this.companyItem = company.companies;
+      this.companyItem = company.body.companies;
     });
   }
 
