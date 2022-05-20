@@ -55,7 +55,7 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  deleteStation() {
+  deleteTicket() {
     this.ticketService.deleteTicket(this.idDelete).subscribe(
       (data) => {
         this.toastService.success("Delete ticket success!");

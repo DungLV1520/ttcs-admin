@@ -54,7 +54,7 @@ export class CustomersComponent implements OnInit {
       station: ["", [Validators.required]],
       vehicles: [""],
       description: ["", [Validators.required]],
-      image: [""],
+      // image: [""],
     });
 
     this.formSearch = this.formBuilder.group({
@@ -121,11 +121,11 @@ export class CustomersComponent implements OnInit {
 
   createCompany() {
     if (this.formData.valid) {
-      this.formImage.append("description", this.formData.value.description);
-      this.formImage.append("name", this.formData.value.name);
-      this.formImage.append("station", this.formData.value.station);
-      this.formImage.append("vehicles", this.formData.value.vehicles);
-      this.companyService.createCompany(this.formImage).subscribe(
+      // this.formImage.append("description", this.formData.value.description);
+      // this.formImage.append("name", this.formData.value.name);
+      // this.formImage.append("station", this.formData.value.station);
+      // this.formImage.append("vehicles", this.formData.value.vehicles);
+      this.companyService.createCompany(this.formData.value).subscribe(
         (data) => {
           this.toastService.success("Create company success!");
           this._fetchData();
@@ -140,11 +140,11 @@ export class CustomersComponent implements OnInit {
 
   updateCompany(id: string) {
     if (this.formData.valid) {
-      this.formImage.append("description", this.formData.value.description);
-      this.formImage.append("name", this.formData.value.name);
-      this.formImage.append("station", this.formData.value.station);
-      this.formImage.append("vehicles", this.formData.value.vehicles);
-      this.companyService.updateCompany(this.formImage, id).subscribe(
+      // this.formImage.append("description", this.formData.value.description);
+      // this.formImage.append("name", this.formData.value.name);
+      // this.formImage.append("station", this.formData.value.station);
+      // this.formImage.append("vehicles", this.formData.value.vehicles);
+      this.companyService.updateCompany(this.formData.value, id).subscribe(
         (data) => {
           this.toastService.success("Update company success!");
           this._fetchData();
@@ -189,7 +189,7 @@ export class CustomersComponent implements OnInit {
         this.toastService.error("File size exceeds 5MB");
         return;
       }
-      this.formImage.append("image", file, file.name);
+      // this.formImage.append("image", file, file.name);
     }
   }
 

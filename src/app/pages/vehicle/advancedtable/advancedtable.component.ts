@@ -47,6 +47,7 @@ export class AdvancedtableComponent implements OnInit {
   indexSeat: string;
   idTable: string;
   disableUpdate: boolean;
+  disableCpn: boolean;
 
   constructor(
     private modalService: NgbModal,
@@ -316,6 +317,8 @@ export class AdvancedtableComponent implements OnInit {
    */
   openModal(content?: any, checkEdit?: boolean, item?: any) {
     this.submitted = false;
+    this.disableCpn = checkEdit;
+
     this.title = !checkEdit ? "Add Vehicle" : "Update Vehicle";
     this.modalService.open(content);
     if (checkEdit) {

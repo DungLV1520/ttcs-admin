@@ -8,6 +8,7 @@ import { User } from "../../core/models/auth.models";
 @Injectable({ providedIn: "root" })
 export class AuthService {
   SERVER_URL = "https://ttcs-booking.herokuapp.com/api/v1";
+
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 

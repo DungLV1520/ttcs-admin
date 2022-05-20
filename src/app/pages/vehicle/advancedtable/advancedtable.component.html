@@ -174,7 +174,16 @@
                         >
                           <td>{{ table.sku }}</td>
                           <td>{{ table.type }}</td>
-                          <td>{{ table.status ? "Booked" : "Empty" }}</td>
+                          <td>
+                            <span
+                              class="badge"
+                              [ngClass]="{
+                                'bg-success': table.status === true,
+                                'bg-danger': table.status === false
+                              }"
+                              >{{ table.status ? "Booked" : "Empty" }}</span
+                            >
+                          </td>
                           <td>{{ table.createdAt | date: "dd MMM, YYYY" }}</td>
                           <td>{{ table.updatedAt | date: "dd MMM, YYYY" }}</td>
                           <td>
@@ -280,6 +289,7 @@
                 formControlName="company"
                 placeholder="Enter company"
                 [ngClass]="{ 'is-invalid': submitted && form.company.errors }"
+                [readonly]="disableCpn"
               ></ng-select>
               <div
                 *ngIf="submitted && form.company.errors"

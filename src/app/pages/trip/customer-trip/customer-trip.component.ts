@@ -86,11 +86,16 @@ export class CustomerTripComponent implements OnInit {
 
   private _fetchDataCompany() {
     this.companyService.getCompany().subscribe((data: any) => {
-      this.customerDataCompany = data.companies;
+      this.customerDataCompany = data.body.companies;
     });
   }
 
   getVehicleFromCompany(event?: any) {
+    this.vehicleService
+      .getVehicleByIDCompany(this.formData.value.company)
+      .subscribe((data: any) => {
+        this.customerDataVehicle = data?.vehicles;
+      });
     this.formData.patchValue({
       vehicle: "",
     });
@@ -178,24 +183,19 @@ export class CustomerTripComponent implements OnInit {
    * @param content modal content
    */
   openModal(content?: any, checkEdit?: boolean, item?: any) {
-    this.vehicleService
-      .getVehicleByIDCompany(item?.company?._id)
-      .subscribe((data: any) => {
-        this.customerDataVehicle = data?.vehicles;
-      });
     this.submitted = false;
     this.title = !checkEdit ? "Add Trip" : "Update Trip";
     this.modalService.open(content);
     if (checkEdit) {
       this.formData.patchValue({
-        id: item._id,
-        from: item.from,
-        to: item.to,
-        company: item.company?._id,
-        guestCapacity: item.guestCapacity,
-        vehicle: item.vehicle?._id,
-        startTime: moment(item.startTime).toISOString().substring(0, 10),
-        price: item.price,
+        id: item?._id,
+        from: item?.from,
+        to: item?.to,
+        company: item?.company?._id,
+        guestCapacity: item?.guestCapacity,
+        vehicle: item?.vehicle?._id,
+        startTime: moment(item?.startTime).toISOString().substring(0, 10),
+        price: item?.price,
       });
     } else {
       this.formData.reset();

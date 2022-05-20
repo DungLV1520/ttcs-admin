@@ -12,7 +12,7 @@ export class TicketService {
   }
 
   deleteTicket(id: string) {
-    return this.http.delete(`${this.SERVER_URL}/ticket/${id}`);
+    return this.http.delete(`${this.SERVER_URL}/tickets/${id}`);
   }
 
   searchTicket(vehicle: any) {
