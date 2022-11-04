@@ -1,0 +1,16 @@
+.text-feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #f46a6a;
+}
+
+
+.truncate{
+  margin: 0;
+  padding-left: 5px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

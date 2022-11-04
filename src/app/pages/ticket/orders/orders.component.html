@@ -1,12 +1,5 @@
+<app-loader></app-loader>
 <div class="container-fluid" style="position: relative">
-  <div
-    class="spinner-border text-info m-1"
-    role="status"
-    *ngIf="loading"
-    style="position: absolute; top: -3%; left: 7%"
-  >
-    <span class="sr-only">Loading...</span>
-  </div>
   <app-page-title
     title="Ticket"
     [breadcrumbItems]="breadCrumbItems"
@@ -53,6 +46,7 @@
             <table class="table table-centered table-nowrap">
               <thead class="table-light">
                 <tr>
+                  <th class="align-middle">#</th>
                   <th class="align-middle">Name</th>
                   <th class="align-middle">Email</th>
                   <th class="align-middle">Amount Paid</th>
@@ -66,21 +60,27 @@
               <tbody>
                 <tr *ngFor="let data of customersData; let i = index">
                   <td>
-                    <a (click)="navigateStation()" class="text-body fw-bold">{{
-                      data.user?.name
-                    }}</a>
+                    {{ i + 1 }}
+                  </td>
+                  <td (click)="openModal(content, data)">
+                    <a class="text-body fw-bold">{{ data.user?.name }}</a>
                   </td>
                   <td>{{ data.user?.email }}</td>
                   <td>{{ data.amountPaid | currency: "":"":"1.0" }}</td>
                   <td>
                     <div *ngFor="let item of data.seat">
-                      <p class="mb-1">{{ item.sku }}</p>
+                      <p class="badge bg-success mb-1">{{ item.sku }}</p>
                     </div>
                   </td>
                   <td>
                     <div>
-                      <p class="mb-1">{{ getProvince(data.trip?.from) }}</p>
-                      <p class="mb-1">{{ getToProvince(data.trip?.to) }}</p>
+                      <p class="badge bg-success mb-1">
+                        {{ getProvince(data.trip?.from) }}
+                      </p>
+                      <br />
+                      <p class="badge bg-success mb-1">
+                        {{ getToProvince(data.trip?.to) }}
+                      </p>
                     </div>
                   </td>
                   <td>{{ data.createdAt | date: "dd MMM, YYYY" }}</td>
@@ -177,8 +177,9 @@
                         <td>
                           {{
                             product.type === "VIP"
-                              ? dataItem.trip.price * 1.2
-                              : dataItem.trip.price
+                              ? (dataItem.trip.price * 1.2
+                                | currency: "":"":"1.0")
+                              : (dataItem.trip.price | currency: "":"":"1.0")
                           }}
                         </td>
                       </tr>

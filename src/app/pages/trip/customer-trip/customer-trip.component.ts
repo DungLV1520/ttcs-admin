@@ -89,17 +89,19 @@ export class CustomerTripComponent implements OnInit {
       this.customerDataCompany = data.body.companies;
     });
   }
-
   getVehicleFromCompany(event?: any) {
     this.vehicleService
       .getVehicleByIDCompany(this.formData.value.company)
-      .subscribe((data: any) => {
-        this.customerDataVehicle = data?.vehicles;
-      });
+      .subscribe(
+        (data: any) => {
+          this.customerDataVehicle = data?.vehicles;
+        },
+        (err) => {}
+      );
     this.formData.patchValue({
       vehicle: "",
     });
-    this.customerDataVehicle = event.vehicles.filter((data) => {
+    this.customerDataVehicle = event?.vehicles?.filter((data) => {
       return data.isCreatedTrip === false;
     });
   }
@@ -183,6 +185,12 @@ export class CustomerTripComponent implements OnInit {
    * @param content modal content
    */
   openModal(content?: any, checkEdit?: boolean, item?: any) {
+    this.vehicleService.getVehicleByIDCompany(item?.company?._id).subscribe(
+      (data: any) => {
+        this.customerDataVehicle = data?.vehicles;
+      },
+      (err) => {}
+    );
     this.submitted = false;
     this.title = !checkEdit ? "Add Trip" : "Update Trip";
     this.modalService.open(content);

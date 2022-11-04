@@ -78,10 +78,6 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  navigateStation(): void {
-    this.router.navigateByUrl("ticket/detail");
-  }
-
   private _fetchDataVehicle() {
     this.vehicleService.getVehicle().subscribe((data: any) => {
       this.customerDataVehicle = data.vehicles;
@@ -89,7 +85,6 @@ export class OrdersComponent implements OnInit {
   }
   guestIDVehicle(event: any): void {
     this.loading = true;
-    console.log(event);
     const objVehicle = {
       vehicle: event._id,
     };

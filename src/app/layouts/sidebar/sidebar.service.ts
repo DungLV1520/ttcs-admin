@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { SERVER_URL } from "src/app/app.constants";
 
 @Injectable({ providedIn: "root" })
 export class ProfileService {
-  SERVER_URL = "https://ttcs-booking.herokuapp.com/api/v1";
   constructor(private http: HttpClient) {}
 
   getProfile() {
-    return this.http.get(`${this.SERVER_URL}/users/account`);
+    return this.http.get(`${SERVER_URL}/users/account`);
   }
 }

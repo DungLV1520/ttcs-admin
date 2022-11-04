@@ -1,12 +1,11 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-
-import { AdvancedtableComponent } from "./advancedtable/advancedtable.component";
+import { ListJobComponent } from "./list-job/list-job.component";
 
 const routes: Routes = [
   {
-    path: "advanced",
-    component: AdvancedtableComponent,
+    path: "list-user",
+    component: ListJobComponent,
   },
 ];
 
@@ -14,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class VehicleRoutingModule {}
+export class JobRoutingModule {}

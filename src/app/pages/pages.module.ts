@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-
 import {
   NgbNavModule,
   NgbDropdownModule,
@@ -18,7 +17,7 @@ import bootstrapPlugin from "@fullcalendar/bootstrap";
 import { LightboxModule } from "ngx-lightbox";
 import { UIModule } from "../shared/ui/ui.module";
 import { PagesRoutingModule } from "./pages-routing.module";
-import { StationModule } from "./station/station.module";
+import { JobModule } from "./job/job.module";
 import { TripModule } from "./trip/trip.module";
 import { SeatModule } from "./seat/seat.module";
 import { ContactsModule } from "./profile/contacts.module";
@@ -27,14 +26,13 @@ import { FormModule } from "./form/form.module";
 import { IconsModule } from "./icons/icons.module";
 import { ChartModule } from "./chart/chart.module";
 import { MapsModule } from "./maps/maps.module";
-import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
 import { UserModule } from "./user/user.module";
 import { TicketModule } from "./ticket/ticket.module";
 import { CompanyModule } from "./company/company.module";
 import { VehicleModule } from "./vehicle/vehicle.module";
 
 FullCalendarModule.registerPlugins([
-  // register FullCalendar plugins
   dayGridPlugin,
   interactionPlugin,
   bootstrapPlugin,
@@ -50,7 +48,7 @@ FullCalendarModule.registerPlugins([
     NgApexchartsModule,
     ReactiveFormsModule,
     SeatModule,
-    StationModule,
+    JobModule,
     HttpClientModule,
     UIModule,
     ContactsModule,

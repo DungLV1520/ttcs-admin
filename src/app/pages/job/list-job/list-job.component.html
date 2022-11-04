@@ -1,0 +1,575 @@
+<app-loader *ngIf="loading"></app-loader>
+<div class="container-fluid" style="position: relative">
+  <app-page-title
+    title="JOB"
+    [breadcrumbItems]="breadCrumbItems"
+  ></app-page-title>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm-10">
+              <div class="search-box me-2 mb-2 d-inline-block">
+                <form [formGroup]="formUser" style="display: flex">
+                  <div class="position-relative">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Search criterion..."
+                      (keyup)="searchJob()"
+                      formControlName="criterion"
+                    />
+                    <i class="bx bx-search-alt search-icon"></i>
+                  </div>
+                  <div class="position-relative mx-2">
+                    <input
+                      type="number"
+                      class="form-control"
+                      placeholder="Search latitude..."
+                      (keyup)="searchJob()"
+                      formControlName="latitude"
+                    />
+                    <i class="bx bx-search-alt search-icon"></i>
+                  </div>
+                  <div class="position-relative">
+                    <input
+                      type="number"
+                      class="form-control"
+                      placeholder="Search longitude..."
+                      (keyup)="searchJob()"
+                      formControlName="longitude"
+                    />
+                    <i class="bx bx-search-alt search-icon"></i>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="text-sm-end">
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  (click)="openModal(content, false)"
+                >
+                  <i class="bx bx-smile font-size-16 align-middle me-2"></i> ADD
+                  JOB
+                </button>
+              </div>
+            </div>
+            <!-- end col-->
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle table-nowrap">
+              <thead>
+                <tr>
+                  <th class="text-center">#</th>
+                  <th class="text-center" style="width: 200px">Title</th>
+                  <th class="text-center" style="width: 200px">Company</th>
+                  <th class="text-center">Easy Apply</th>
+                  <th class="text-center" style="width: 200px">Industry</th>
+                  <th class="text-center">Application Count</th>
+                  <th class="text-center">Save Count</th>
+                  <th class="text-center">CreatedAt</th>
+                  <th class="text-center">UpdatedAt</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let customers of customersData; let i = index">
+                  <td class="text-center">
+                    {{ getRowNumber(i) }}
+                  </td>
+                  <td
+                    class="text-center"
+                    (click)="openModal(content, true, customers)"
+                  >
+                    <p class="truncate" style="margin: 0">
+                      {{ customers.title }}
+                    </p>
+                  </td>
+                  <td class="text-center">
+                    <p class="truncate" style="margin: 0">
+                      {{ customers.company }}
+                    </p>
+                  </td>
+                  <td class="text-center">
+                    {{ customers.easy_apply.toString() | uppercase }}
+                  </td>
+                  <td class="text-center">
+                    <p class="truncate" style="margin: 0">
+                      {{ customers.industry }}
+                    </p>
+                  </td>
+                  <td class="text-center">
+                    {{ customers.application_count }}
+                  </td>
+                  <td class="text-center">
+                    {{ customers.save_count }}
+                  </td>
+                  <td class="text-center">
+                    {{ customers.createdAt | date: "dd MMM, YYYY" }}
+                  </td>
+                  <td class="text-center">
+                    {{ customers.updatedAt | date: "dd MMM, YYYY" }}
+                  </td>
+                  <td style="text-align: center">
+                    <div class="dropdown" ngbDropdown placement="bottom-right">
+                      <a
+                        href="javascript: void(0);"
+                        class="dropdown-toggle card-drop"
+                        data-toggle="dropdown"
+                        ngbDropdownToggle
+                        aria-expanded="false"
+                      >
+                        <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                      </a>
+                      <ul
+                        class="dropdown-menu dropdown-menu-end"
+                        ngbDropdownMenu
+                      >
+                        <li>
+                          <a
+                            (click)="openModal(content, true, customers)"
+                            class="dropdown-item"
+                            ><i class="fas fa-pencil-alt text-success me-1"></i>
+                            Edit</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            (click)="
+                              openModalDelete(contentdelete, customers._id)
+                            "
+                            class="dropdown-item"
+                            ><i class="fas fa-trash-alt text-danger me-1"></i>
+                            Delete</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- pagination -->
+          <ngb-pagination
+            [collectionSize]="totalPage"
+            [pageSize]="10"
+            [(page)]="currentpage"
+            (pageChange)="getPageJob($event)"
+            class="pagination pagination-rounded justify-content-end mb-2"
+            aria-label="Default pagination"
+          >
+          </ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end row -->
+</div>
+
+<ng-template #content role="document" let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title mt-0">
+      <b>{{ title | uppercase }}</b>
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-hidden="true"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="saveJob()" [formGroup]="formData">
+      <div class="row">
+        <div class="col-6">
+          <div class="mb-3">
+            <label class="control-label">Title</label>
+            <input
+              class="form-control"
+              placeholder="Enter Title"
+              type="text"
+              name="title"
+              autocomplete="off"
+              formControlName="title"
+              [ngClass]="{ 'is-invalid': submitted && form.title.errors }"
+            />
+            <div
+              *ngIf="submitted && form.title.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.title.errors.required">Title is required.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label class="control-label">Company</label>
+            <input
+              class="form-control"
+              placeholder="Enter Company"
+              type="text"
+              name="company"
+              autocomplete="off"
+              formControlName="company"
+              [ngClass]="{ 'is-invalid': submitted && form.company.errors }"
+            />
+            <div
+              *ngIf="submitted && form.company.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.company.errors.required"
+                >Company is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-6" *ngIf="title !== 'Add User'">
+          <div class="mb-3">
+            <label class="control-label">Industry</label>
+            <input
+              class="form-control"
+              placeholder="Enter Industry"
+              type="text"
+              name="industry"
+              autocomplete="off"
+              formControlName="industry"
+              [ngClass]="{ 'is-invalid': submitted && form.industry.errors }"
+            />
+            <div
+              *ngIf="submitted && form.industry.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.industry.errors.required"
+                >Industry is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label class="control-label">Type</label>
+            <input
+              class="form-control"
+              placeholder="Enter Type"
+              type="text"
+              name="type"
+              autocomplete="off"
+              [ngClass]="{
+                'is-invalid': submitted && form.type.errors
+              }"
+              formControlName="type"
+            />
+            <div *ngIf="submitted && form.type.errors" class="invalid-feedback">
+              <span *ngIf="form.type.errors.required">Type is required.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label class="control-label">Function</label>
+            <input
+              class="form-control"
+              placeholder="Enter Function"
+              type="text"
+              name="function"
+              autocomplete="off"
+              [ngClass]="{
+                'is-invalid': submitted && form.function.errors
+              }"
+              formControlName="function"
+            />
+            <div
+              *ngIf="submitted && form.function.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.function.errors.required"
+                >Function is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label class="control-label">Company Logo</label>
+            <input
+              class="form-control"
+              placeholder="Enter Company Logo"
+              type="text"
+              name="company_logo"
+              autocomplete="off"
+              [ngClass]="{
+                'is-invalid': submitted && form.company_logo.errors
+              }"
+              formControlName="company_logo"
+            />
+            <div
+              *ngIf="submitted && form.company_logo.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.company_logo.errors.required"
+                >Company Logo is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="mt-2">
+            <div
+              class="mb-2"
+              style="display: flex; justify-content: space-between"
+            >
+              <label class="control-label">Easy Apply</label>
+              <div>
+                <ui-switch
+                  size="small"
+                  defaultBoColor="#dfdfdf"
+                  color="#34c38f"
+                  class="ms-1"
+                  (change)="checkEasyApply($event)"
+                  [checked]="easyApply"
+                ></ui-switch>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="mb-3">
+            <label class="control-label">Skill</label>
+            <tag-input
+              [(ngModel)]="itemSkill"
+              [ngModelOptions]="{ standalone: true }"
+              theme="bootstrap"
+              [editable]="true"
+              [modelAsStrings]="true"
+              placeholder="Enter Skill"
+              (onTagEdited)="onTagEdited($event)"
+            >
+            </tag-input>
+            <div
+              *ngIf="submitted && itemSkill.length < 1"
+              class="text-feedback"
+            >
+              <span>Skill is required.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <div>
+              <textarea
+                formControlName="description"
+                class="form-control"
+                rows="5"
+                [ngClass]="{
+                  'is-invalid': submitted && form.description.errors
+                }"
+              ></textarea>
+              <div
+                *ngIf="submitted && form.description.errors"
+                class="invalid-feedback"
+              >
+                <span *ngIf="form.description.errors.required"
+                  >Description is required.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div
+            class="mb-2"
+            style="display: flex; justify-content: space-between"
+          >
+            <label class="control-label"><b>Address</b></label>
+            <div>
+              <ui-switch
+                size="small"
+                defaultBoColor="#dfdfdf"
+                color="#34c38f"
+                class="ms-1"
+                (change)="checkAddress($event)"
+              ></ui-switch>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="isAddress">
+          <div class="row">
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">Street</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Street"
+                  type="text"
+                  name="street"
+                  autocomplete="off"
+                  formControlName="street"
+                  [ngClass]="{ 'is-invalid': submitted && form.street.errors }"
+                />
+                <div
+                  *ngIf="submitted && form.street.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.street.errors.required"
+                    >Street is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">City</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Company"
+                  type="text"
+                  name="city"
+                  autocomplete="off"
+                  formControlName="city"
+                  [ngClass]="{ 'is-invalid': submitted && form.city.errors }"
+                />
+                <div
+                  *ngIf="submitted && form.city.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.city.errors.required"
+                    >City is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">Country</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Location"
+                  type="text"
+                  name="country"
+                  autocomplete="off"
+                  formControlName="country"
+                  [ngClass]="{ 'is-invalid': submitted && form.country.errors }"
+                />
+                <div
+                  *ngIf="submitted && form.country.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.country.errors.required"
+                    >Country is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">Zipcode</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Headline"
+                  type="text"
+                  name="zipcode"
+                  autocomplete="off"
+                  formControlName="zipcode"
+                  [ngClass]="{ 'is-invalid': submitted && form.zipcode.errors }"
+                />
+                <div
+                  *ngIf="submitted && form.zipcode.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.zipcode.errors.required"
+                    >Zipcode is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">Latitude</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Latitude"
+                  type="text"
+                  name="latitude"
+                  autocomplete="off"
+                  formControlName="latitude"
+                  [ngClass]="{
+                    'is-invalid': submitted && form.latitude.errors
+                  }"
+                />
+                <div
+                  *ngIf="submitted && form.latitude.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.latitude.errors.required"
+                    >Latitude is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">Longitude</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Headline"
+                  type="text"
+                  name="longitude"
+                  autocomplete="off"
+                  formControlName="longitude"
+                  [ngClass]="{
+                    'is-invalid': submitted && form.longitude.errors
+                  }"
+                />
+                <div
+                  *ngIf="submitted && form.longitude.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.longitude.errors.required"
+                    >Longitude is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <button type="submit" class="btn btn-success" id="btn-save-event">
+        Save
+      </button>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Standard Modal -->
+<ng-template #contentdelete role="document" let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title mt-0">CONFIRMATION</h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-hidden="true"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <h5>Do you really want to delete?</h5>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      Cancel
+    </button>
+    <button (click)="deleteJob()" type="button" class="btn btn-primary">
+      OK
+    </button>
+  </div>
+</ng-template>

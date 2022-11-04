@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   error = "";
   returnUrl: string;
   loading: boolean = false;
+  check: boolean = false;
 
   // set the currenr year
   year: number = new Date().getFullYear();
@@ -43,6 +44,10 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
+  checkPasswordShow() {
+    this.check = !this.check;
+  }
+
   onSubmit() {
     this.submitted = true;
     this.loading = true;
@@ -54,7 +59,7 @@ export class LoginComponent implements OnInit {
         .pipe(first())
         .subscribe(
           (data) => {
-            this.router.navigate(["/station/customers"]);
+            this.router.navigate(["/user/list"]);
             this.loading = false;
           },
           (error) => {

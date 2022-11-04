@@ -1,12 +1,5 @@
+<app-loader></app-loader>
 <div class="container-fluid" style="position: relative">
-  <div
-    class="spinner-border text-info m-1"
-    role="status"
-    *ngIf="loading"
-    style="position: absolute; top: -3%; left: 8%"
-  >
-    <span class="sr-only">Loading...</span>
-  </div>
   <app-page-title
     title="Vehicle"
     [breadcrumbItems]="breadCrumbItems"
@@ -94,12 +87,16 @@
                       +
                     </a>
                   </td>
-                  <td>
+                  <td (click)="openModal(content, true, table)">
                     <ngb-highlight [result]="table.name"></ngb-highlight>
                   </td>
-                  <td>
+                  <td (click)="openModal(content, true, table)">
                     <ngb-highlight
-                      [result]="table.company?.name"
+                      [result]="
+                        table.company?.name
+                          ? table.company.name
+                          : getNameCompany(table.company)
+                      "
                     ></ngb-highlight>
                   </td>
                   <td>
@@ -172,8 +169,12 @@
                             let i = index
                           "
                         >
-                          <td>{{ table.sku }}</td>
-                          <td>{{ table.type }}</td>
+                          <td (click)="openModalSeat(contentSeat, true, table)">
+                            {{ table.sku }}
+                          </td>
+                          <td (click)="openModalSeat(contentSeat, true, table)">
+                            {{ table.type }}
+                          </td>
                           <td>
                             <span
                               class="badge"

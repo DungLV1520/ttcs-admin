@@ -1,10 +1,8 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-
-import { StationRoutingModule } from "./station-routing.module";
+import { JobRoutingModule } from "./job-routing.module";
 import { UIModule } from "../../shared/ui/ui.module";
-
 import { Ng5SliderModule } from "ng5-slider";
 import { Ng2SearchPipeModule } from "ng2-search-filter";
 import {
@@ -12,14 +10,15 @@ import {
   NgbDropdownModule,
   NgbPaginationModule,
   NgbModalModule,
+  NgbDatepickerModule,
 } from "@ng-bootstrap/ng-bootstrap";
 import { DropzoneModule } from "ngx-dropzone-wrapper";
 import { DROPZONE_CONFIG } from "ngx-dropzone-wrapper";
 import { DropzoneConfigInterface } from "ngx-dropzone-wrapper";
 import { NgSelectModule } from "@ng-select/ng-select";
-
-import { ProductdetailComponent } from "./productdetail/productdetail.component";
-import { CustomersComponent } from "./customers/customers.component";
+import { ListJobComponent } from "./list-job/list-job.component";
+import { TagInputModule } from "ngx-chips";
+import { UiSwitchModule } from "ngx-ui-switch";
 
 const config: DropzoneConfigInterface = {
   // Change this to your upload POST address:
@@ -28,10 +27,10 @@ const config: DropzoneConfigInterface = {
 };
 
 @NgModule({
-  declarations: [ProductdetailComponent, CustomersComponent],
+  declarations: [ListJobComponent],
   imports: [
     CommonModule,
-    StationRoutingModule,
+    JobRoutingModule,
     NgbNavModule,
     NgbModalModule,
     FormsModule,
@@ -43,6 +42,9 @@ const config: DropzoneConfigInterface = {
     Ng5SliderModule,
     NgSelectModule,
     NgbPaginationModule,
+    TagInputModule,
+    UiSwitchModule,
+    NgbDatepickerModule,
   ],
   providers: [
     {
@@ -51,4 +53,4 @@ const config: DropzoneConfigInterface = {
     },
   ],
 })
-export class StationModule {}
+export class JobModule {}

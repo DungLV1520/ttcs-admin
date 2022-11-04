@@ -1,12 +1,5 @@
+<app-loader></app-loader>
 <div class="container-fluid" style="position: relative">
-  <div
-    class="spinner-border text-info m-1"
-    role="status"
-    *ngIf="loading"
-    style="position: absolute; top: -3%; left: 7%"
-  >
-    <span class="sr-only">Loading...</span>
-  </div>
   <app-page-title
     title="Seat"
     [breadcrumbItems]="breadCrumbItems"
@@ -73,6 +66,7 @@
   <table id="basic-datatable" class="table dt-responsive nowrap">
     <thead>
       <tr>
+        <th>#</th>
         <th>Name Seat</th>
         <th>Name Vehicle</th>
         <th>Type</th>
@@ -82,7 +76,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let table of customersData">
+      <tr *ngFor="let table of customersData; let i = index">
+        <td>
+          {{ i + 1 }}
+        </td>
         <td>
           <ngb-highlight [result]="table.sku"> </ngb-highlight>
         </td>

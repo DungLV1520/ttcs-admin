@@ -4,11 +4,11 @@
       <!-- LOGO -->
       <div
         *ngIf="!checkLogoText"
-        routerLink="/"
+        routerLink="/user/list"
         class="navbar-brand-box pt-4"
-        style="font-size: 19px; color: white"
+        style="font-size: 19px; color: white; cursor: pointer"
       >
-        <i class="bx bxs-bot mx-1"></i>BOOKING
+        <i class="bx bxs-bot mx-1"></i>FINDJOB
       </div>
       <div
         *ngIf="checkLogoText"
@@ -124,9 +124,9 @@
           <div class="px-sm-2">
             <div class="row no-gutters">
               <div class="col">
-                <a class="dropdown-icon-item" routerLink="/crypto-ico-landing">
+                <a class="dropdown-icon-item">
                   <img src="assets/images/brands/slack.png" alt="slack" />
-                  <span>Booking USER</span>
+                  <span>FINDJOB</span>
                 </a>
               </div>
             </div>

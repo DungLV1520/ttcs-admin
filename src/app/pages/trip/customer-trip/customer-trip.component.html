@@ -1,12 +1,5 @@
-<div class="container-fluid" style="position: relative">
-  <div
-    class="spinner-border text-info m-1"
-    role="status"
-    *ngIf="loading"
-    style="position: absolute; top: -3%; left: 4%"
-  >
-    <span class="sr-only">Loading...</span>
-  </div>
+<app-loader></app-loader>
+<div class="container-fluid">
   <app-page-title
     title="Trip"
     [breadcrumbItems]="breadCrumbItems"
@@ -102,19 +95,12 @@
                   "
                 >
                   <td>
-                    <div class="form-check font-size-16">
-                      <input
-                        id="customCheck{{ i }}"
-                        type="checkbox"
-                        class="form-check-input"
-                      />
-                      <label class="form-check-label" for="customCheck{{ i }}"
-                        >&nbsp;</label
-                      >
-                    </div>
+                    {{ i + 1 }}
                   </td>
-                  <td>{{ getProvince(customers.from) }}</td>
-                  <td>
+                  <td (click)="openModal(content, true, customers)">
+                    {{ getProvince(customers.from) }}
+                  </td>
+                  <td (click)="openModal(content, true, customers)">
                     <p class="mb-1">{{ getToProvince(customers.to) }}</p>
                   </td>
                   <td>{{ customers.startTime | date: "dd MMM, YYYY" }}</td>

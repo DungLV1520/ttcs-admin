@@ -5,7 +5,7 @@ export class arrayModel {
 }
 
 // tslint:disable-next-line: class-name
-export class productModel {
+export class jobModel {
     id: number;
     category: string;
     name: string;
@@ -30,7 +30,7 @@ export class filterObject {
     minVal: number;
 }
 
-export const productList: productModel[] = [
+export const productList: jobModel[] = [
     {
         id: 1,
         category: 'T-shirts',

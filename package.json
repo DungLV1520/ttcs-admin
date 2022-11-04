@@ -58,6 +58,7 @@
     "ng2-smart-table": "^1.7.2",
     "ng5-slider": "^1.2.6",
     "ngx-chartist": "^1.0.3",
+    "ngx-chips": "^2.2.2",
     "ngx-color-picker": "^11.0.0",
     "ngx-cookie-service": "^11.0.2",
     "ngx-drag-drop": "^2.0.0",

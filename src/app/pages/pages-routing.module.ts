@@ -2,11 +2,10 @@ import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
 const routes: Routes = [
-  { path: "", redirectTo: "station/customers" },
+  { path: "", redirectTo: "job/list-user" },
   {
-    path: "station",
-    loadChildren: () =>
-      import("./station/station.module").then((m) => m.StationModule),
+    path: "job",
+    loadChildren: () => import("./job/job.module").then((m) => m.JobModule),
   },
   {
     path: "trip",

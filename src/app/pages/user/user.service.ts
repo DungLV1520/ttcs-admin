@@ -1,32 +1,35 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Customers } from "./customers/customers.model";
+import { SERVER_URL } from "src/app/app.constants";
+import { Customers } from "./list-user/list-user.model";
 
 @Injectable({
   providedIn: "root",
 })
 export class UserService {
-  SERVER_URL = "https://ttcs-booking.herokuapp.com/api/v1";
-
   constructor(private http: HttpClient) {}
 
   getUser(page?: number) {
-    return this.http.get(`${this.SERVER_URL}/users/all?pageNumber=${page}`);
+    return this.http.get(`${SERVER_URL}/users?pageNumber=${page}`);
   }
 
-  createUser(users: Customers) {
-    return this.http.post(`${this.SERVER_URL}/users/register`, users);
+  createUser(users: any) {
+    return this.http.post(`${SERVER_URL}/auth/signup`, users, {
+      observe: "response",
+    });
   }
 
-  updateUser(users: Customers, id: string) {
-    return this.http.put(`${this.SERVER_URL}/users/${id}`, users);
+  updateUser(users: any, id: string) {
+    return this.http.put(`${SERVER_URL}/users/${id}`, users, {
+      observe: "response",
+    });
   }
 
   deleteUser(id: string) {
-    return this.http.delete(`${this.SERVER_URL}/users/${id}`);
+    return this.http.delete(`${SERVER_URL}/users/${id}`);
   }
 
   searchUser(user: any) {
-    return this.http.post(`${this.SERVER_URL}/users/search`, user);
+    return this.http.post(`${SERVER_URL}/search/users`, { name: user.value });
   }
 }

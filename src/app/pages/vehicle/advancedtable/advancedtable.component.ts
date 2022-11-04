@@ -107,6 +107,11 @@ export class AdvancedtableComponent implements OnInit {
     });
   }
 
+  getNameCompany(name: string) {
+    let a = this.companyItem.filter((company) => company._id === name);
+    return a[0].name;
+  }
+
   get formSeats() {
     return this.formSeat.controls;
   }
@@ -167,6 +172,7 @@ export class AdvancedtableComponent implements OnInit {
       );
     }
   }
+
   creatSeat() {
     if (this.formSeat.valid) {
       this.vehicleService.creatSeat(this.formSeat?.value).subscribe(

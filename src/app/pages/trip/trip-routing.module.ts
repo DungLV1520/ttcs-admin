@@ -19,7 +19,7 @@ const routes: Routes = [
     component: AddtripComponent,
   },
   {
-    path: "customers-trip",
+    path: "list-user-trip",
     component: CustomerTripComponent,
   },
 

@@ -1,12 +1,5 @@
+<app-loader></app-loader>
 <div class="container-fluid" style="position: relative">
-  <div
-    class="spinner-border text-info m-1"
-    role="status"
-    *ngIf="loading"
-    style="position: absolute; top: -3%; left: 8%"
-  >
-    <span class="sr-only">Loading...</span>
-  </div>
   <app-page-title
     title="Company"
     [breadcrumbItems]="breadCrumbItems"
@@ -63,18 +56,9 @@
               <tbody>
                 <tr *ngFor="let customers of customersData; let i = index">
                   <td>
-                    <div class="form-check font-size-16">
-                      <input
-                        id="customCheck{{ i }}"
-                        type="checkbox"
-                        class="form-check-input"
-                      />
-                      <label class="form-check-label" for="customCheck{{ i }}"
-                        >&nbsp;</label
-                      >
-                    </div>
+                    {{ i + 1 }}
                   </td>
-                  <td (click)="navigateStation()">
+                  <td (click)="openModal(content, true, customers)">
                     {{ customers.name }}
                   </td>
                   <td>
@@ -84,7 +68,7 @@
                   <td>{{ customers.station?.name }}</td>
                   <td>
                     <div *ngFor="let item of customers.vehicles">
-                      <p class="mb-1">{{ item.name }}</p>
+                      <p class="badge bg-success mb-1">{{ item.name }}</p>
                     </div>
                   </td>
 
@@ -225,9 +209,12 @@
             <ng-select
               placeholder="Enter vehicle"
               [items]="vehicleData"
+              [multiple]="true"
               bindLabel="name"
               bindValue="_id"
               formControlName="vehicles"
+              [(ngModel)]="vehicleDataFake"
+              [compareWith]="compareFn"
               [ngClass]="{ 'is-invalid': submitted && form.vehicles.errors }"
             ></ng-select>
             <div

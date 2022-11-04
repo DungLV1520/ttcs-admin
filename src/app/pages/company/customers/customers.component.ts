@@ -5,13 +5,13 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { CompanyService } from "../company.service";
 import { Customers } from "./customers.model";
 import { ToastrService } from "ngx-toastr";
-import { StationService } from "../../station/station.service";
+import { JobService } from "../../job/job.service";
 import { VehicleService } from "../../vehicle/vehicle.service";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 @Component({
-  selector: "app-customers",
+  selector: "app-list-user",
   templateUrl: "./customers.component.html",
   styleUrls: ["./customers.component.scss"],
 })
@@ -34,7 +34,7 @@ export class CustomersComponent implements OnInit {
   checkShow?: boolean = false;
   constructor(
     private companyService: CompanyService,
-    private stationService: StationService,
+    private stationService: JobService,
     private vehicleService: VehicleService,
     private toastService: ToastrService,
     private formBuilder: FormBuilder,
@@ -85,7 +85,7 @@ export class CustomersComponent implements OnInit {
   }
 
   private _fetchStation() {
-    this.stationService.getStation().subscribe((data: any) => {
+    this.stationService.getJob().subscribe((data: any) => {
       this.stationsData = data.stations;
     });
   }
@@ -123,7 +123,7 @@ export class CustomersComponent implements OnInit {
     if (this.formData.valid) {
       // this.formImage.append("description", this.formData.value.description);
       // this.formImage.append("name", this.formData.value.name);
-      // this.formImage.append("station", this.formData.value.station);
+      // this.formImage.append("job", this.formData.value.job);
       // this.formImage.append("vehicles", this.formData.value.vehicles);
       this.companyService.createCompany(this.formData.value).subscribe(
         (data) => {
@@ -142,7 +142,7 @@ export class CustomersComponent implements OnInit {
     if (this.formData.valid) {
       // this.formImage.append("description", this.formData.value.description);
       // this.formImage.append("name", this.formData.value.name);
-      // this.formImage.append("station", this.formData.value.station);
+      // this.formImage.append("job", this.formData.value.job);
       // this.formImage.append("vehicles", this.formData.value.vehicles);
       this.companyService.updateCompany(this.formData.value, id).subscribe(
         (data) => {
@@ -172,7 +172,7 @@ export class CustomersComponent implements OnInit {
   }
 
   navigateStation(): void {
-    this.router.navigateByUrl("ecommerce/product-detail/1");
+    // this.router.navigateByUrl("ecommerce/product-detail/1");
   }
 
   searchCompany(): void {
@@ -198,18 +198,28 @@ export class CustomersComponent implements OnInit {
    * @param content modal content
    */
   image: string;
+  vehicleDataFake: any;
   openModal(content: any, checkEdit, item?: any) {
     this.image = item?.imageUrl;
     this.submitted = false;
     this.title = !checkEdit ? "Add company" : "Update company";
     this.modalService.open(content);
+
+    if (checkEdit) {
+      let a = item?.vehicles?.map((data) => data._id);
+      this.vehicleDataFake = this.vehicleData?.filter(function (o) {
+        return a?.indexOf(o._id) !== -1;
+      });
+    } else {
+      this.vehicleDataFake = [];
+    }
     if (checkEdit) {
       this.formData.patchValue({
         id: item._id,
         name: item.name,
         description: item.description,
         station: item.station._id,
-        vehicles: item.vehicles[0]?._id,
+        // vehicles: item.vehicles,
         image: item.imageKey,
       });
     } else {
@@ -230,7 +240,10 @@ export class CustomersComponent implements OnInit {
   onclick(event) {
     if (event.target.matches(".editor-div")) {
       this.checkShow = !this.checkShow;
-      console.log("aaa");
     }
+  }
+
+  public compareFn(a, b): boolean {
+    return a == b;
   }
 }

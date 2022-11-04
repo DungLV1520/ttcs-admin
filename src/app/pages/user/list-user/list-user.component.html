@@ -1,0 +1,1056 @@
+<app-loader *ngIf="loading"></app-loader>
+<div class="container-fluid" style="position: relative">
+  <app-page-title
+    title="USER"
+    [breadcrumbItems]="breadCrumbItems"
+  ></app-page-title>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm-4">
+              <div class="search-box me-2 mb-2 d-inline-block">
+                <form [formGroup]="formUser">
+                  <div class="position-relative">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Search..."
+                      (keyup)="searchUser()"
+                      formControlName="value"
+                    />
+                    <i class="bx bx-search-alt search-icon"></i>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <div class="text-sm-end">
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  (click)="openModal(content, false)"
+                >
+                  <i class="bx bx-smile font-size-16 align-middle me-2"></i> ADD
+                  USER
+                </button>
+              </div>
+            </div>
+            <!-- end col-->
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle table-nowrap">
+              <thead>
+                <tr>
+                  <th class="text-center">#</th>
+                  <th class="text-center">Name</th>
+                  <th class="text-center">Role</th>
+                  <th class="text-center">CreatedAt</th>
+                  <th class="text-center">UpdatedAt</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let customers of customersData; let i = index">
+                  <td class="text-center">
+                    {{ getRowNumber(i) }}
+                  </td>
+                  <td
+                    class="text-center"
+                    (click)="openModal(content, true, customers)"
+                  >
+                    {{ customers.name.last + " " + customers.name.first }}
+                  </td>
+                  <td class="text-center">
+                    <span
+                      class="badge"
+                      [ngClass]="{
+                        'bg-success': customers.status === 'Recruiter',
+                        'bg-primary': customers.status === 'Applicant'
+                      }"
+                      style="font-size: 12px"
+                      >{{ customers.status }}</span
+                    >
+                  </td>
+                  <td class="text-center">
+                    {{ customers.createdAt | date: "dd MMM, YYYY" }}
+                  </td>
+                  <td class="text-center">
+                    {{ customers.updatedAt | date: "dd MMM, YYYY" }}
+                  </td>
+                  <td style="text-align: center">
+                    <div class="dropdown" ngbDropdown placement="bottom-right">
+                      <a
+                        href="javascript: void(0);"
+                        class="dropdown-toggle card-drop"
+                        data-toggle="dropdown"
+                        ngbDropdownToggle
+                        aria-expanded="false"
+                      >
+                        <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                      </a>
+                      <ul
+                        class="dropdown-menu dropdown-menu-end"
+                        ngbDropdownMenu
+                      >
+                        <li>
+                          <a
+                            (click)="openModal(content, true, customers)"
+                            class="dropdown-item"
+                            ><i class="fas fa-pencil-alt text-success me-1"></i>
+                            Edit</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            (click)="
+                              openModalDelete(contentdelete, customers.id)
+                            "
+                            class="dropdown-item"
+                            ><i class="fas fa-trash-alt text-danger me-1"></i>
+                            Delete</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- pagination -->
+          <ngb-pagination
+            [collectionSize]="totalPage"
+            [pageSize]="10"
+            [(page)]="currentpage"
+            (pageChange)="getPageUser($event)"
+            class="pagination pagination-rounded justify-content-end mb-2"
+            aria-label="Default pagination"
+          >
+          </ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end row -->
+</div>
+
+<ng-template #content role="document" let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title mt-0">
+      <b>{{ title | uppercase }}</b>
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-hidden="true"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="saveCustomer()" [formGroup]="formData">
+      <div class="row">
+        <ng-container *ngIf="title === 'Add User'">
+          <div class="col-6">
+            <div class="mb-3">
+              <label class="control-label">Email</label>
+              <input
+                class="form-control"
+                placeholder="Enter Email"
+                type="text"
+                name="email"
+                autocomplete="off"
+                formControlName="email"
+                [ngClass]="{ 'is-invalid': submitted && form.email.errors }"
+              />
+              <div
+                *ngIf="submitted && form.email.errors"
+                class="invalid-feedback"
+              >
+                <span *ngIf="form.email.errors.required"
+                  >Email is required.</span
+                >
+                <span *ngIf="form.email.errors.required"
+                  >Email must be a valid email address.</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="mb-3">
+              <label class="control-label">Password</label>
+              <input
+                class="form-control"
+                placeholder="Enter Password"
+                type="text"
+                name="password"
+                autocomplete="off"
+                formControlName="password"
+                [ngClass]="{ 'is-invalid': submitted && form.password.errors }"
+              />
+              <div
+                *ngIf="submitted && form.password.errors"
+                class="invalid-feedback"
+              >
+                <span *ngIf="form.password.errors.required"
+                  >Password is required.</span
+                >
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <div class="col-6">
+          <div class="mb-3">
+            <label class="control-label">Last Name</label>
+            <input
+              class="form-control"
+              placeholder="Enter LastName"
+              type="text"
+              name="lastName"
+              autocomplete="off"
+              formControlName="lastName"
+              [ngClass]="{ 'is-invalid': submitted && form.lastName.errors }"
+            />
+            <div
+              *ngIf="submitted && form.lastName.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.lastName.errors.required"
+                >Last Name is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label class="control-label">First Name</label>
+            <input
+              class="form-control"
+              placeholder="Enter FirstName"
+              type="text"
+              name="firstName"
+              autocomplete="off"
+              formControlName="firstName"
+              [ngClass]="{ 'is-invalid': submitted && form.firstName.errors }"
+            />
+            <div
+              *ngIf="submitted && form.firstName.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.firstName.errors.required"
+                >First Name is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-6" *ngIf="title !== 'Add User'">
+          <div class="mb-3">
+            <label class="control-label">Head Line</label>
+            <input
+              class="form-control"
+              placeholder="Enter HeadLine"
+              type="text"
+              name="headline"
+              autocomplete="off"
+              formControlName="headline"
+              [ngClass]="{ 'is-invalid': submitted && form.headline.errors }"
+            />
+            <div
+              *ngIf="submitted && form.headline.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.headline.errors.required"
+                >HeadLine is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label class="control-label">Company</label>
+            <input
+              class="form-control"
+              placeholder="Enter Company"
+              type="text"
+              name="company"
+              autocomplete="off"
+              formControlName="company"
+              [ngClass]="{ 'is-invalid': submitted && form.company.errors }"
+            />
+            <div
+              *ngIf="submitted && form.company.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.company.errors.required"
+                >Company is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label class="control-label">Phone</label>
+            <input
+              class="form-control"
+              placeholder="Enter Phone"
+              type="number"
+              name="phone"
+              autocomplete="off"
+              formControlName="phone"
+              [ngClass]="{ 'is-invalid': submitted && form.phone.errors }"
+            />
+            <div
+              *ngIf="submitted && form.phone.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.phone.errors.required">Phone is required.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6" *ngIf="title !== 'Add User'">
+          <div class="mb-3">
+            <label class="control-label">Resume</label>
+            <input
+              class="form-control"
+              placeholder="Enter Resume"
+              type="text"
+              name="resume"
+              autocomplete="off"
+              formControlName="resume"
+              [ngClass]="{ 'is-invalid': submitted && form.resume.errors }"
+            />
+            <div
+              *ngIf="submitted && form.resume.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.resume.errors.required"
+                >Resume is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-6" *ngIf="title !== 'Add User'">
+          <div class="mb-3">
+            <label class="control-label">Profile Image</label>
+            <input
+              class="form-control"
+              placeholder="Enter Profile Image"
+              type="text"
+              name="profile_image"
+              autocomplete="off"
+              [ngClass]="{
+                'is-invalid': submitted && form.profile_image.errors
+              }"
+              formControlName="profile_image"
+            />
+            <div
+              *ngIf="submitted && form.profile_image.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.profile_image.errors.required"
+                >Profile Image is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-6" *ngIf="title !== 'Add User'">
+          <div class="mb-3">
+            <label class="control-label">Banner Image</label>
+            <input
+              class="form-control"
+              placeholder="Enter Banner Image"
+              type="text"
+              name="banner_image"
+              autocomplete="off"
+              [ngClass]="{
+                'is-invalid': submitted && form.banner_image.errors
+              }"
+              formControlName="banner_image"
+            />
+            <div
+              *ngIf="submitted && form.banner_image.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.banner_image.errors.required"
+                >Banner Image is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="checkRole === 'Applicant'">
+          <div class="mb-3">
+            <label class="control-label">Skill</label>
+            <tag-input
+              [(ngModel)]="itemSkill"
+              [ngModelOptions]="{ standalone: true }"
+              theme="bootstrap"
+              [editable]="true"
+              [modelAsStrings]="true"
+              placeholder="Enter Skill"
+              (onTagEdited)="onTagEdited($event)"
+            >
+            </tag-input>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="mb-3">
+            <label class="control-label">Role</label>
+            <ng-select
+              placeholder="Enter Role"
+              [items]="itemRole"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="role"
+              [readonly]="title === 'Update User'"
+              [ngClass]="{
+                'is-invalid': submitted && form.role.errors
+              }"
+              (change)="checkRoleSelect($event)"
+            ></ng-select>
+            <div *ngIf="submitted && form.role.errors" class="invalid-feedback">
+              <span *ngIf="form.role.errors.required">Role is required.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="title !== 'Add User'">
+          <div class="mb-3">
+            <label class="form-label">Summary</label>
+            <div>
+              <textarea
+                formControlName="summary"
+                class="form-control"
+                rows="5"
+                [ngClass]="{ 'is-invalid': submitted && form.summary.errors }"
+              ></textarea>
+              <div
+                *ngIf="submitted && form.summary.errors"
+                class="invalid-feedback"
+              >
+                <span *ngIf="form.summary.errors.required"
+                  >Summary is required.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div
+            class="mb-2"
+            style="display: flex; justify-content: space-between"
+          >
+            <label class="control-label"><b>Address</b></label>
+            <div>
+              <ui-switch
+                size="small"
+                defaultBoColor="#dfdfdf"
+                color="#34c38f"
+                class="ms-1"
+                (change)="checkAddress($event)"
+              ></ui-switch>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="isAddress">
+          <div class="row">
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">Street</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Street"
+                  type="text"
+                  name="street"
+                  autocomplete="off"
+                  formControlName="street"
+                  [ngClass]="{ 'is-invalid': submitted && form.street.errors }"
+                />
+                <div
+                  *ngIf="submitted && form.street.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.street.errors.required"
+                    >Street is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">City</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Company"
+                  type="text"
+                  name="city"
+                  autocomplete="off"
+                  formControlName="city"
+                  [ngClass]="{ 'is-invalid': submitted && form.city.errors }"
+                />
+                <div
+                  *ngIf="submitted && form.city.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.city.errors.required"
+                    >City is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">Country</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Location"
+                  type="text"
+                  name="country"
+                  autocomplete="off"
+                  formControlName="country"
+                  [ngClass]="{ 'is-invalid': submitted && form.country.errors }"
+                />
+                <div
+                  *ngIf="submitted && form.country.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.country.errors.required"
+                    >Country is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">Zipcode</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Headline"
+                  type="text"
+                  name="zipcode"
+                  autocomplete="off"
+                  formControlName="zipcode"
+                  [ngClass]="{ 'is-invalid': submitted && form.zipcode.errors }"
+                />
+                <div
+                  *ngIf="submitted && form.zipcode.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.zipcode.errors.required"
+                    >Zipcode is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">Latitude</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Latitude"
+                  type="text"
+                  name="latitude"
+                  autocomplete="off"
+                  formControlName="latitude"
+                  [ngClass]="{
+                    'is-invalid': submitted && form.latitude.errors
+                  }"
+                />
+                <div
+                  *ngIf="submitted && form.latitude.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.latitude.errors.required"
+                    >Latitude is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="control-label">Longitude</label>
+                <input
+                  class="form-control"
+                  placeholder="Enter Headline"
+                  type="text"
+                  name="longitude"
+                  autocomplete="off"
+                  formControlName="longitude"
+                  [ngClass]="{
+                    'is-invalid': submitted && form.longitude.errors
+                  }"
+                />
+                <div
+                  *ngIf="submitted && form.longitude.errors"
+                  class="invalid-feedback"
+                >
+                  <span *ngIf="form.longitude.errors.required"
+                    >Longitude is required.</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="checkRole === 'Applicant'">
+          <div class="col-12">
+            <div
+              class="mb-2"
+              style="display: flex; justify-content: space-between"
+            >
+              <label class="control-label"><b>Education</b></label>
+              <div
+                style="display: flex; justify-content: center; align-items: end"
+              >
+                <i
+                  class="bx bx-plus-medical"
+                  style="font-size: 21px"
+                  (click)="addEducation()"
+                ></i>
+                <ui-switch
+                  size="small"
+                  defaultBoColor="#dfdfdf"
+                  color="#34c38f"
+                  class="ms-1"
+                  (change)="checkEducation($event)"
+                ></ui-switch>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="isEducation">
+            <div class="row" *ngFor="let item of educationItems; let i = index">
+              <div class="col-6">
+                <div class="mb-3">
+                  <div>
+                    <label class="control-label">School</label>
+                    <i
+                      class="bx bx-plus-medical mx-2"
+                      (click)="addEducation()"
+                    ></i>
+                    <i
+                      class="bx bxs-minus-square mx-2"
+                      (click)="deleteEducation(i)"
+                    ></i>
+                  </div>
+                  <input
+                    class="form-control"
+                    placeholder="Enter School"
+                    type="text"
+                    name="school"
+                    autocomplete="off"
+                    [(ngModel)]="item.school"
+                    [ngModelOptions]="{ standalone: true }"
+                    [ngClass]="{ 'is-invalid': submitted && !item.school }"
+                  />
+                  <div
+                    *ngIf="submitted && !item.school"
+                    class="invalid-feedback"
+                  >
+                    <span>School is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">Degree</label>
+                  <input
+                    class="form-control"
+                    placeholder="Enter Degree"
+                    type="text"
+                    name="degree"
+                    autocomplete="off"
+                    [(ngModel)]="item.degree"
+                    [ngModelOptions]="{ standalone: true }"
+                    [ngClass]="{ 'is-invalid': submitted && !item.degree }"
+                  />
+                  <div
+                    *ngIf="submitted && !item.degree"
+                    class="invalid-feedback"
+                  >
+                    <span>Degree is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">Field</label>
+                  <input
+                    class="form-control"
+                    placeholder="Enter Field"
+                    type="text"
+                    name="field"
+                    autocomplete="off"
+                    [(ngModel)]="item.field"
+                    [ngModelOptions]="{ standalone: true }"
+                    [ngClass]="{ 'is-invalid': submitted && !item.field }"
+                  />
+                  <div
+                    *ngIf="submitted && !item.field"
+                    class="invalid-feedback"
+                  >
+                    <span>Field is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">Grade</label>
+                  <input
+                    class="form-control"
+                    placeholder="Enter Grade"
+                    type="text"
+                    name="grade"
+                    autocomplete="off"
+                    [(ngModel)]="item.grade"
+                    [ngModelOptions]="{ standalone: true }"
+                    [ngClass]="{ 'is-invalid': submitted && !item.grade }"
+                  />
+                  <div
+                    *ngIf="submitted && !item.grade"
+                    class="invalid-feedback"
+                  >
+                    <span>Grade is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">Start Date</label>
+                  <input
+                    class="form-control"
+                    placeholder="Enter to station"
+                    type="date"
+                    name="startdate"
+                    autocomplete="off"
+                    [(ngModel)]="item.startdate"
+                    [ngModelOptions]="{ standalone: true }"
+                    [ngClass]="{
+                      'is-invalid':
+                        submitted &&
+                        (item.startdate === null ||
+                          item.startdate === undefined ||
+                          item.startdate == '')
+                    }"
+                  />
+                  <div
+                    *ngIf="
+                      submitted &&
+                      (item.startdate === null ||
+                        item.startdate === undefined ||
+                        item.startdate == '')
+                    "
+                    class="invalid-feedback"
+                  >
+                    <span>Start Date is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">To Date</label>
+                  <input
+                    class="form-control"
+                    placeholder="Enter to station"
+                    type="date"
+                    name="enddate"
+                    autocomplete="off"
+                    [(ngModel)]="item.enddate"
+                    [ngModelOptions]="{ standalone: true }"
+                    [ngClass]="{
+                      'is-invalid':
+                        submitted &&
+                        (item.enddate === null ||
+                          item.enddate === undefined ||
+                          item.enddate == '')
+                    }"
+                  />
+                  <div
+                    *ngIf="
+                      submitted &&
+                      (item.enddate === null ||
+                        item.enddate === undefined ||
+                        item.enddate == '')
+                    "
+                    class="invalid-feedback"
+                  >
+                    <span>To Date is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="mb-3">
+                  <label class="control-label">Description</label>
+                  <div>
+                    <textarea
+                      [(ngModel)]="item.description"
+                      [ngModelOptions]="{ standalone: true }"
+                      class="form-control"
+                      rows="5"
+                      [ngClass]="{
+                        'is-invalid': submitted && !item.description
+                      }"
+                    ></textarea>
+                  </div>
+                  <div
+                    *ngIf="submitted && !item.description"
+                    class="text-feedback"
+                  >
+                    <span>Description is required.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <div class="col-12">
+            <div
+              class="mb-2"
+              style="display: flex; justify-content: space-between"
+            >
+              <label class="control-label"><b>Experience</b></label>
+              <div
+                style="display: flex; justify-content: center; align-items: end"
+              >
+                <i
+                  class="bx bx-plus-medical"
+                  (click)="addExperience()"
+                  style="font-size: 21px"
+                ></i>
+
+                <ui-switch
+                  size="small"
+                  defaultBoColor="#dfdfdf"
+                  color="#34c38f"
+                  class="ms-1"
+                  (change)="checkExperience($event)"
+                ></ui-switch>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="isExperience">
+            <div
+              class="row"
+              *ngFor="let item of experienceItems; let i = index"
+            >
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">Title</label>
+                  <i
+                    class="bx bx-plus-medical mx-2"
+                    (click)="addExperience()"
+                  ></i>
+                  <i
+                    class="bx bxs-minus-square mx-2"
+                    (click)="deleteExperience(i)"
+                  ></i>
+                  <input
+                    class="form-control"
+                    [(ngModel)]="item.title"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="Enter Title"
+                    type="text"
+                    name="title"
+                    autocomplete="off"
+                    [ngClass]="{ 'is-invalid': submitted && !item.title }"
+                  />
+                  <div
+                    *ngIf="submitted && !item.title"
+                    class="invalid-feedback"
+                  >
+                    <span>Title is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">Company</label>
+                  <input
+                    class="form-control"
+                    [(ngModel)]="item.company"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="Enter Company"
+                    type="text"
+                    name="exCompany"
+                    autocomplete="off"
+                    [ngClass]="{
+                      'is-invalid': submitted && !item.company
+                    }"
+                  />
+                  <div
+                    *ngIf="submitted && !item.company"
+                    class="invalid-feedback"
+                  >
+                    <span>Company is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">Location</label>
+                  <input
+                    class="form-control"
+                    [(ngModel)]="item.location"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="Enter Location"
+                    type="text"
+                    name="location"
+                    autocomplete="off"
+                    [ngClass]="{
+                      'is-invalid': submitted && !item.location
+                    }"
+                  />
+                  <div
+                    *ngIf="submitted && !item.location"
+                    class="invalid-feedback"
+                  >
+                    <span>Location is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">Headline</label>
+                  <input
+                    class="form-control"
+                    [(ngModel)]="item.headline"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="Enter Headline"
+                    type="text"
+                    name="exHeadline"
+                    autocomplete="off"
+                    [ngClass]="{
+                      'is-invalid': submitted && !item.headline
+                    }"
+                  />
+                  <div
+                    *ngIf="submitted && !item.headline"
+                    class="invalid-feedback"
+                  >
+                    <span>Headline is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">Start Date</label>
+                  <input
+                    class="form-control"
+                    [(ngModel)]="item.startdate"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="Enter to station"
+                    type="date"
+                    name="startdate"
+                    autocomplete="off"
+                    [ngClass]="{
+                      'is-invalid':
+                        submitted &&
+                        (item.startdate === null ||
+                          item.startdate === undefined ||
+                          item.startdate == '')
+                    }"
+                  />
+                  <div
+                    *ngIf="
+                      submitted &&
+                      (item.startdate === null ||
+                        item.startdate === undefined ||
+                        item.startdate == '')
+                    "
+                    class="invalid-feedback"
+                  >
+                    <span>Start Date is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-3">
+                  <label class="control-label">To Date</label>
+                  <input
+                    class="form-control"
+                    [(ngModel)]="item.enddate"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="Enter to station"
+                    type="date"
+                    name="enddate"
+                    autocomplete="off"
+                    [ngClass]="{
+                      'is-invalid':
+                        submitted &&
+                        (item.enddate === null ||
+                          item.enddate === undefined ||
+                          item.enddate == '')
+                    }"
+                  />
+                  <div
+                    *ngIf="
+                      submitted &&
+                      (item.enddate === null ||
+                        item.enddate === undefined ||
+                        item.enddate == '')
+                    "
+                    class="invalid-feedback"
+                  >
+                    <span>To Date is required.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="mb-3">
+                  <label class="control-label">Description</label>
+                  <div>
+                    <textarea
+                      [(ngModel)]="item.description"
+                      [ngModelOptions]="{ standalone: true }"
+                      class="form-control"
+                      rows="5"
+                      [ngClass]="{
+                        'is-invalid': submitted && !item.description
+                      }"
+                    ></textarea>
+                    <div
+                      *ngIf="submitted && !item.description"
+                      class="text-feedback"
+                    >
+                      <span>Description is required.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+      <button type="submit" class="btn btn-success" id="btn-save-event">
+        Save
+      </button>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Standard Modal -->
+<ng-template #contentdelete role="document" let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title mt-0">CONFIRMATION</h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-hidden="true"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <h5>Do you really want to delete?</h5>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      Cancel
+    </button>
+    <button (click)="deleteUser()" type="button" class="btn btn-primary">
+      OK
+    </button>
+  </div>
+</ng-template>

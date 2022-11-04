@@ -2,13 +2,11 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
-
 import { User } from "../../core/models/auth.models";
+import { SERVER_URL } from "src/app/app.constants";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
-  SERVER_URL = "https://ttcs-booking.herokuapp.com/api/v1";
-
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
@@ -25,7 +23,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.http
-      .post<any>(`${this.SERVER_URL}/users/login`, { email, password })
+      .post<any>(`${SERVER_URL}/auth/login`, { email, password })
       .pipe(
         map((user) => {
           if (user && user.token) {
@@ -42,14 +40,17 @@ export class AuthService {
     this.currentUserSubject.next(null);
   }
 
-  register(user: User) {
-    return this.http.post(`${this.SERVER_URL}/users/register`, user);
+  register(user: any) {
+    return this.http.post(`${SERVER_URL}/auth/signup`, user, {
+      observe: "response",
+    });
   }
 
   updateProfile(user: User) {
-    return this.http.put(`${this.SERVER_URL}/users/update`, user);
+    return this.http.put(`${SERVER_URL}/users/update`, user);
   }
+
   forgetPass(user: any) {
-    return this.http.post(`${this.SERVER_URL}/users/forgot`, user);
+    return this.http.post(`${SERVER_URL}/users/forgot`, user);
   }
 }

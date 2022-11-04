@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
-import { StationService } from "../../station/station.service";
+import { JobService } from "../../job/job.service";
 import { VehicleService } from "../../vehicle/vehicle.service";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";

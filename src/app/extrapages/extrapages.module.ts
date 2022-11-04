@@ -12,7 +12,6 @@ import { VerificationComponent } from "./verification/verification.component";
 import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
-  // tslint:disable-next-line: max-line-length
   declarations: [
     Page404Component,
     Page500Component,
@@ -25,7 +24,7 @@ import { ReactiveFormsModule } from "@angular/forms";
     CarouselModule,
     ExtrapagesRoutingModule,
     NgOtpInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
 })
 export class ExtrapagesModule {}
