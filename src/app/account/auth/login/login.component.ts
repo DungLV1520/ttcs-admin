@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
         .pipe(first())
         .subscribe(
           (data) => {
-            this.router.navigate(["/user/list"]);
+            this.router.navigate(["/charts/echart"]);
             this.loading = false;
           },
           (error) => {

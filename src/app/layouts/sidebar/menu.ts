@@ -24,6 +24,12 @@ export const MENU: MenuItem[] = [
     icon: "bx-store",
     link: "/job/list-user",
   },
+  {
+    id: 12,
+    label: "PROFILE",
+    icon: "bx bx-user-circle",
+    link: "/contacts/profile",
+  },
   // {
   //   id: 12,
   //   label: "Trip",

@@ -236,7 +236,7 @@ export class ListJobComponent implements OnInit {
 
   openModal(content?: any, checkEdit?: boolean, item?: any) {
     this.formData.reset();
-    this.isAddress = false;
+    this.isAddress = true;
     this.submitted = false;
     this.itemSkill = [];
     this.title = !checkEdit ? "Add Job" : "Update Job";

@@ -303,9 +303,9 @@ export class ListUserComponent implements OnInit {
 
   openModal(content?: any, checkEdit?: boolean, item?: any) {
     this.formData.reset();
-    this.isExperience = false;
-    this.isEducation = false;
-    this.isAddress = false;
+    this.isExperience = true;
+    this.isEducation = true;
+    this.isAddress = true;
     this.submitted = false;
     this.itemSkill = [];
     this.educationItems = [];
