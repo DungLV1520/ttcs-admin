@@ -44,7 +44,7 @@ export class EchartComponent implements OnInit {
   ngOnInit(): void {
     this.breadCrumbItems = [
       { label: "Charts" },
-      { label: "E - Chart", active: true },
+      { label: "JobChart", active: true },
     ];
 
     this._fetchData();
