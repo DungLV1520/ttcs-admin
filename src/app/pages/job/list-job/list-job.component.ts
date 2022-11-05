@@ -173,7 +173,7 @@ export class ListJobComponent implements OnInit {
       },
       (err) => {
         this.loading = false;
-        this.toastService.error("Create job failed!!!");
+        this.toastService.error(err);
       }
     );
   }
@@ -197,7 +197,7 @@ export class ListJobComponent implements OnInit {
       },
       (err) => {
         this.loading = false;
-        this.toastService.error("Update job failed!!!");
+        this.toastService.error(err);
       }
     );
   }
@@ -208,8 +208,8 @@ export class ListJobComponent implements OnInit {
         this.toastService.success("Delete job success!");
         this._fetchData();
       },
-      () => {
-        this.toastService.error("Delete job failed!");
+      (error) => {
+        this.toastService.error(error);
       }
     );
     this.modalService.dismissAll();

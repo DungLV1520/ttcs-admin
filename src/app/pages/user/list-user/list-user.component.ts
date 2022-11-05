@@ -7,6 +7,7 @@ import { Customers, Education, Experience } from "./list-user.model";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import * as moment from "moment";
+import { HttpResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-list-user",
@@ -84,7 +85,7 @@ export class ListUserComponent implements OnInit {
           this._fetchData();
         } else {
           this.userService.searchUser(model).subscribe((data: any) => {
-            this.customersData = data.payLoad;
+            this.customersData = data.body.payLoad;
             this.loading = false;
           });
         }
@@ -106,8 +107,8 @@ export class ListUserComponent implements OnInit {
 
   private _fetchData() {
     this.userService.getUser().subscribe((data: any) => {
-      this.changeDateCustomerUser(data);
-      this.totalPage = data.count ?? 0;
+      this.changeDateCustomerUser(data.body);
+      this.totalPage = data.body.count ?? 0;
       this.loading = false;
     });
   }
@@ -215,7 +216,7 @@ export class ListUserComponent implements OnInit {
       },
       (err) => {
         this.loading = false;
-        this.toastService.error("Create user failed!!!");
+        this.toastService.error(err);
       }
     );
   }
@@ -238,6 +239,16 @@ export class ListUserComponent implements OnInit {
 
   updateUser(id: string) {
     const formData = this.formData.value;
+    delete formData.email;
+    delete formData.password;
+    if (this.checkRole === "Applicant") {
+      delete formData.company;
+      delete formData.phone;
+    } else {
+      delete formData.resume;
+      delete formData.summary;
+    }
+
     if (this.formData.valid) {
       if (this.checkRole === "Applicant") {
         if (
@@ -256,15 +267,15 @@ export class ListUserComponent implements OnInit {
     const objData = this.getObjData(formData);
     this.loading = true;
     this.userService.updateUser(objData, id).subscribe(
-      () => {
+      (data) => {
         this.toastService.success("Update user success!!!");
         this._fetchData();
         this.modalService.dismissAll();
         this.loading = false;
       },
-      (err) => {
+      (error) => {
         this.loading = false;
-        this.toastService.error("Update user failed!!!");
+        this.toastService.error(error);
       }
     );
   }
@@ -275,8 +286,8 @@ export class ListUserComponent implements OnInit {
         this.toastService.success("Delete user success!");
         this._fetchData();
       },
-      () => {
-        this.toastService.error("Delete user failed!");
+      (error) => {
+        this.toastService.error(error);
       }
     );
     this.modalService.dismissAll();
@@ -312,23 +323,13 @@ export class ListUserComponent implements OnInit {
     this.experienceItems = [];
     this.checkRole = "";
     this.title = !checkEdit ? "Add User" : "Update User";
+    this.updateValidatorOpenForm();
 
-    if (this.title === "Update User") {
-      this.formData?.get("email")?.clearValidators();
-      this.formData?.get("email")?.updateValueAndValidity();
-      this.formData?.get("password")?.clearValidators();
-      this.formData?.get("password")?.updateValueAndValidity();
-    } else {
-      this.formData?.get("email")?.setValidators([Validators.required]);
-      this.formData?.get("email")?.updateValueAndValidity();
-      this.formData?.get("password")?.setValidators([Validators.required]);
-      this.formData?.get("password")?.updateValueAndValidity();
-    }
     this.modalService.open(content, { size: "lg", backdrop: "static" });
     if (checkEdit) {
-      this.checkRole = item?.status ? item.status : "";
+      this.checkRole = item?.status ? item?.status : "";
       this.formData.patchValue({
-        id: item.id,
+        id: item?.id,
         lastName: item?.name?.last,
         firstName: item?.name?.first,
         headline: item?.headline,
@@ -349,19 +350,61 @@ export class ListUserComponent implements OnInit {
 
       this.itemSkill = item.skills;
       this.educationItems = item?.education?.map((item) => {
-        item.startdate = moment(item.date.startdate)
+        item.startdate = moment(item?.date?.startdate)
           .toISOString()
           .substring(0, 10);
-        item.enddate = moment(item.date.enddate).toISOString().substring(0, 10);
+        item.enddate = moment(item?.date?.enddate)
+          .toISOString()
+          .substring(0, 10);
         return item;
       });
+
       this.experienceItems = item?.experience?.map((item) => {
-        item.startdate = moment(item.date.startdate)
+        item.startdate = moment(item?.date?.startdate)
           .toISOString()
           .substring(0, 10);
-        item.enddate = moment(item.date.enddate).toISOString().substring(0, 10);
+        item.enddate = moment(item?.date?.enddate)
+          .toISOString()
+          .substring(0, 10);
         return item;
       });
+    }
+    this.updateValidator();
+  }
+
+  updateValidatorOpenForm(): void {
+    if (this.title === "Update User") {
+      this.formData?.get("email")?.clearValidators();
+      this.formData?.get("email")?.updateValueAndValidity();
+      this.formData?.get("password")?.clearValidators();
+      this.formData?.get("password")?.updateValueAndValidity();
+    } else {
+      this.formData?.get("email")?.setValidators([Validators.required]);
+      this.formData?.get("email")?.updateValueAndValidity();
+      this.formData?.get("password")?.setValidators([Validators.required]);
+      this.formData?.get("password")?.updateValueAndValidity();
+    }
+  }
+
+  updateValidator(): void {
+    if (this.checkRole === "Applicant") {
+      this.formData?.get("company")?.clearValidators();
+      this.formData?.get("company")?.updateValueAndValidity();
+      this.formData?.get("phone")?.clearValidators();
+      this.formData?.get("phone")?.updateValueAndValidity();
+      this.formData?.get("resume")?.setValidators([Validators.required]);
+      this.formData?.get("resume")?.updateValueAndValidity();
+      this.formData?.get("summary")?.setValidators([Validators.required]);
+      this.formData?.get("summary")?.updateValueAndValidity();
+    } else {
+      this.formData?.get("resume")?.clearValidators();
+      this.formData?.get("resume")?.updateValueAndValidity();
+      this.formData?.get("summary")?.clearValidators();
+      this.formData?.get("summary")?.updateValueAndValidity();
+      this.formData?.get("company")?.setValidators([Validators.required]);
+      this.formData?.get("company")?.updateValueAndValidity();
+      this.formData?.get("phone")?.setValidators([Validators.required]);
+      this.formData?.get("phone")?.updateValueAndValidity();
     }
   }
 

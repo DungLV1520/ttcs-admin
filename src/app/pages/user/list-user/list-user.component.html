@@ -172,7 +172,7 @@
                 <span *ngIf="form.email.errors.required"
                   >Email is required.</span
                 >
-                <span *ngIf="form.email.errors.required"
+                <span *ngIf="form.email.errors.email"
                   >Email must be a valid email address.</span
                 >
               </div>
@@ -245,29 +245,8 @@
             </div>
           </div>
         </div>
-        <div class="col-6" *ngIf="title !== 'Add User'">
-          <div class="mb-3">
-            <label class="control-label">Head Line</label>
-            <input
-              class="form-control"
-              placeholder="Enter HeadLine"
-              type="text"
-              name="headline"
-              autocomplete="off"
-              formControlName="headline"
-              [ngClass]="{ 'is-invalid': submitted && form.headline.errors }"
-            />
-            <div
-              *ngIf="submitted && form.headline.errors"
-              class="invalid-feedback"
-            >
-              <span *ngIf="form.headline.errors.required"
-                >HeadLine is required.</span
-              >
-            </div>
-          </div>
-        </div>
-        <div class="col-6">
+
+        <div class="col-6" *ngIf="checkRole !== 'Applicant'">
           <div class="mb-3">
             <label class="control-label">Company</label>
             <input
@@ -289,7 +268,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-6" *ngIf="checkRole !== 'Applicant'">
           <div class="mb-3">
             <label class="control-label">Phone</label>
             <input
@@ -309,7 +288,10 @@
             </div>
           </div>
         </div>
-        <div class="col-6" *ngIf="title !== 'Add User'">
+        <div
+          class="col-6"
+          *ngIf="title !== 'Add User' && checkRole === 'Applicant'"
+        >
           <div class="mb-3">
             <label class="control-label">Resume</label>
             <input
@@ -328,6 +310,26 @@
               <span *ngIf="form.resume.errors.required"
                 >Resume is required.</span
               >
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label class="control-label">Role</label>
+            <ng-select
+              placeholder="Enter Role"
+              [items]="itemRole"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="role"
+              [readonly]="title === 'Update User'"
+              [ngClass]="{
+                'is-invalid': submitted && form.role.errors
+              }"
+              (change)="checkRoleSelect($event)"
+            ></ng-select>
+            <div *ngIf="submitted && form.role.errors" class="invalid-feedback">
+              <span *ngIf="form.role.errors.required">Role is required.</span>
             </div>
           </div>
         </div>
@@ -379,6 +381,31 @@
             </div>
           </div>
         </div>
+        <div
+          [ngClass]="checkRole === 'Applicant' ? 'col-12' : 'col-6'"
+          *ngIf="title !== 'Add User'"
+        >
+          <div class="mb-3">
+            <label class="control-label">Head Line</label>
+            <input
+              class="form-control"
+              placeholder="Enter HeadLine"
+              type="text"
+              name="headline"
+              autocomplete="off"
+              formControlName="headline"
+              [ngClass]="{ 'is-invalid': submitted && form.headline.errors }"
+            />
+            <div
+              *ngIf="submitted && form.headline.errors"
+              class="invalid-feedback"
+            >
+              <span *ngIf="form.headline.errors.required"
+                >HeadLine is required.</span
+              >
+            </div>
+          </div>
+        </div>
         <div class="col-12" *ngIf="checkRole === 'Applicant'">
           <div class="mb-3">
             <label class="control-label">Skill</label>
@@ -394,27 +421,10 @@
             </tag-input>
           </div>
         </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Role</label>
-            <ng-select
-              placeholder="Enter Role"
-              [items]="itemRole"
-              bindLabel="name"
-              bindValue="id"
-              formControlName="role"
-              [readonly]="title === 'Update User'"
-              [ngClass]="{
-                'is-invalid': submitted && form.role.errors
-              }"
-              (change)="checkRoleSelect($event)"
-            ></ng-select>
-            <div *ngIf="submitted && form.role.errors" class="invalid-feedback">
-              <span *ngIf="form.role.errors.required">Role is required.</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-12" *ngIf="title !== 'Add User'">
+        <div
+          class="col-12"
+          *ngIf="title !== 'Add User' && checkRole === 'Applicant'"
+        >
           <div class="mb-3">
             <label class="form-label">Summary</label>
             <div>
@@ -593,6 +603,7 @@
             </div>
           </div>
         </ng-container>
+
         <ng-container *ngIf="checkRole === 'Applicant'">
           <div class="col-12">
             <div
@@ -729,17 +740,17 @@
                     [ngClass]="{
                       'is-invalid':
                         submitted &&
-                        (item.startdate === null ||
-                          item.startdate === undefined ||
-                          item.startdate == '')
+                        (item.date.startdate === null ||
+                          item.date.startdate === undefined ||
+                          item.date.startdate === '')
                     }"
                   />
                   <div
                     *ngIf="
                       submitted &&
-                      (item.startdate === null ||
-                        item.startdate === undefined ||
-                        item.startdate == '')
+                      (item.date.startdate === null ||
+                        item.date.startdate === undefined ||
+                        item.date.startdate === '')
                     "
                     class="invalid-feedback"
                   >
@@ -761,17 +772,17 @@
                     [ngClass]="{
                       'is-invalid':
                         submitted &&
-                        (item.enddate === null ||
-                          item.enddate === undefined ||
-                          item.enddate == '')
+                        (item.date.enddate === null ||
+                          item.date.enddate === undefined ||
+                          item.date.enddate === '')
                     }"
                   />
                   <div
                     *ngIf="
                       submitted &&
-                      (item.enddate === null ||
-                        item.enddate === undefined ||
-                        item.enddate == '')
+                      (item.date.enddate === null ||
+                        item.date.enddate === undefined ||
+                        item.date.enddate === '')
                     "
                     class="invalid-feedback"
                   >
@@ -947,17 +958,17 @@
                     [ngClass]="{
                       'is-invalid':
                         submitted &&
-                        (item.startdate === null ||
-                          item.startdate === undefined ||
-                          item.startdate == '')
+                        (item.date.startdate === null ||
+                          item.date.startdate === undefined ||
+                          item.date.startdate === '')
                     }"
                   />
                   <div
                     *ngIf="
                       submitted &&
-                      (item.startdate === null ||
-                        item.startdate === undefined ||
-                        item.startdate == '')
+                      (item.date.startdate === null ||
+                        item.date.startdate === undefined ||
+                        item.date.startdate === '')
                     "
                     class="invalid-feedback"
                   >
@@ -979,17 +990,17 @@
                     [ngClass]="{
                       'is-invalid':
                         submitted &&
-                        (item.enddate === null ||
-                          item.enddate === undefined ||
-                          item.enddate == '')
+                        (item.date.enddate === null ||
+                          item.date.enddate === undefined ||
+                          item.date.enddate === '')
                     }"
                   />
                   <div
                     *ngIf="
                       submitted &&
-                      (item.enddate === null ||
-                        item.enddate === undefined ||
-                        item.enddate == '')
+                      (item.date.enddate === null ||
+                        item.date.enddate === undefined ||
+                        item.date.enddate === '')
                     "
                     class="invalid-feedback"
                   >
