@@ -333,19 +333,12 @@ export const MENU: MenuItem[] = [
   //     },
   //   ],
   // },
-  // {
-  //   id: 123,
-  //   label: "MENUITEMS.MAPS.TEXT",
-  //   icon: "bx-map",
-  //   subItems: [
-  //     {
-  //       id: 124,
-  //       label: "MENUITEMS.MAPS.LIST.GOOGLEMAP",
-  //       link: "/maps/google",
-  //       parentId: 123,
-  //     },
-  //   ],
-  // },
+  {
+    id: 123,
+    label: "MAP",
+    icon: "bx-map",
+    link: "/maps/google",
+  },
   // {
   //   id: 125,
   //   label: "MENUITEMS.MULTILEVEL.TEXT",

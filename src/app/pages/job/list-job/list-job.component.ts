@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
 import { Subject } from "rxjs";
@@ -34,6 +35,7 @@ export class ListJobComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private jobService: JobService,
+    private router: Router,
     private toastService: ToastrService
   ) {}
 
@@ -284,5 +286,18 @@ export class ListJobComponent implements OnInit {
 
   getRowNumber(indexRow: number): number {
     return indexRow + 1 + (this.currentpage - 1) * this.totalPage;
+  }
+
+  showMap(): void {
+    this.modalService.dismissAll();
+    const latitude = this.form.latitude.value;
+    const longitude = this.form.longitude.value;
+    console.log(latitude);
+    this.router.navigate(["/maps/google"], {
+      queryParams: {
+        latitude: latitude,
+        longitude: longitude,
+      },
+    });
   }
 }

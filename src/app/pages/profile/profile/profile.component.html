@@ -18,17 +18,33 @@
             <form (ngSubmit)="submitProfile()" [formGroup]="FormProfile">
               <div class="row mb-4">
                 <label
-                  for="horizontal-firstname-input"
+                  for="horizontal-lastname-input"
                   class="col-sm-3 col-form-label"
-                  >Name</label
+                  >Last Name</label
                 >
                 <div class="col-sm-9">
                   <input
                     type="text"
                     class="form-control"
-                    placeholder="Enter your name"
+                    placeholder="Enter LastName"
+                    id="horizontal-lastname-input"
+                    formControlName="lastName"
+                  />
+                </div>
+              </div>
+              <div class="row mb-4">
+                <label
+                  for="horizontal-firstname-input"
+                  class="col-sm-3 col-form-label"
+                  >First Name</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter FirstName"
                     id="horizontal-firstname-input"
-                    formControlName="name"
+                    formControlName="firstName"
                   />
                 </div>
               </div>

@@ -1,58 +1,72 @@
-import { Component, OnInit, ViewChild, Input, Inject, PLATFORM_ID } from '@angular/core';
-
-import { MapsAPILoader } from '@agm/core';
-
-import { isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+} from "@angular/core";
+import { MapsAPILoader } from "@agm/core";
+import { isPlatformBrowser } from "@angular/common";
+import { ActivatedRoute } from "@angular/router";
+import { Location } from "@angular/common";
 
 @Component({
-  selector: 'app-google',
-  templateUrl: './google.component.html',
-  styleUrls: ['./google.component.scss']
+  selector: "app-google",
+  templateUrl: "./google.component.html",
+  styleUrls: ["./google.component.scss"],
 })
-
-/**
- * Google component
- */
 export class GoogleComponent implements OnInit {
-  longitude = 20.728218;
-  latitude = 52.128973;
+  loading = true;
+  latitude = 20.984068;
+  longitude = 105.862511;
   markers: any;
-
-  @ViewChild('streetviewMap', { static: true }) streetviewMap: any;
-  @ViewChild('streetviewPano', { static: true }) streetviewPano: any;
-
-  // bread crumb items
+  @ViewChild("streetviewMap", { static: true }) streetviewMap: any;
+  @ViewChild("streetviewPano", { static: true }) streetviewPano: any;
   breadCrumbItems: Array<{}>;
-  constructor(@Inject(PLATFORM_ID) private platformId: any, private mapsAPILoader: MapsAPILoader) { }
 
+  constructor(
+    private route: ActivatedRoute,
+    private _location: Location,
+    @Inject(PLATFORM_ID) private platformId: any,
+    private mapsAPILoader: MapsAPILoader
+  ) {}
 
   ngOnInit(): void {
-    this.breadCrumbItems = [{ label: 'Maps' }, { label: 'Google Maps', active: true }];
+    setTimeout(() => {
+      this.loading = false;
+    }, 500);
+    this.route.queryParams.subscribe((params) => {
+      if (params) {
+        this.latitude = params["latitude"];
+        this.longitude = params["longitude"];
+      }
+    });
+
+    this.breadCrumbItems = [
+      { label: "Maps" },
+      { label: "Google Maps", active: true },
+    ];
 
     this._initPanorama();
-
-    /**
-     * fetches data
-     */
     this._fetchData();
   }
 
-  /**
-   * street view map
-   */
   _initPanorama() {
     if (isPlatformBrowser(this.platformId)) {
       this.mapsAPILoader.load().then(() => {
-        const center = { lat: 42.345573, lng: -71.098326 };
-        // tslint:disable-next-line: no-string-literal
-        const map = new window['google'].maps.Map(this.streetviewMap.nativeElement, { center, zoom: 12, scrollwheel: false });
-        // tslint:disable-next-line: no-string-literal
-        const panorama = new window['google'].maps.StreetViewPanorama(
-          this.streetviewPano.nativeElement, {
-          position: center,
-          pov: { heading: 34, pitch: 10 },
-          scrollwheel: false
-        });
+        const center = { lat: this.latitude, lng: this.longitude };
+        const map = new window["google"].maps.Map(
+          this.streetviewMap.nativeElement,
+          { center, zoom: 12, scrollwheel: false }
+        );
+        const panorama = new window["google"].maps.StreetViewPanorama(
+          this.streetviewPano.nativeElement,
+          {
+            position: center,
+            pov: { heading: 34, pitch: 10 },
+            scrollwheel: false,
+          }
+        );
         map.setStreetView(panorama);
       });
     }
@@ -69,13 +83,11 @@ export class GoogleComponent implements OnInit {
     this.markers.push({ latitude: lat, longitude: lng });
   }
 
-  /**
-   * Fetches the value of map
-   */
   private _fetchData() {
-    this.markers = [
-      { latitude: 52.228973, longitude: 20.728218 }
-    ];
+    this.markers = [{ lat: this.latitude, lng: this.longitude }];
   }
 
+  back(): void {
+    this._location.back();
+  }
 }

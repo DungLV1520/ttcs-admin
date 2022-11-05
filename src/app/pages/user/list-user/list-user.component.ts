@@ -7,7 +7,7 @@ import { Customers, Education, Experience } from "./list-user.model";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import * as moment from "moment";
-import { HttpResponse } from "@angular/common/http";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-list-user",
@@ -39,6 +39,7 @@ export class ListUserComponent implements OnInit {
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private router: Router,
     private toastService: ToastrService
   ) {}
 
@@ -451,5 +452,18 @@ export class ListUserComponent implements OnInit {
 
   getRowNumber(indexRow: number): number {
     return indexRow + 1 + (this.currentpage - 1) * this.totalPage;
+  }
+
+  showMap(): void {
+    this.modalService.dismissAll();
+    const latitude = this.form.latitude.value;
+    const longitude = this.form.longitude.value;
+    console.log(latitude);
+    this.router.navigate(["/maps/google"], {
+      queryParams: {
+        latitude: latitude,
+        longitude: longitude,
+      },
+    });
   }
 }

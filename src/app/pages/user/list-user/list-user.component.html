@@ -451,6 +451,17 @@
             style="display: flex; justify-content: space-between"
           >
             <label class="control-label"><b>Address</b></label>
+            <div
+              class="event-timeline-dot"
+              (click)="showMap()"
+              *ngIf="this.title !== 'Add User'"
+            >
+              <i
+                class="bx bxs-right-arrow-circle bx-fade-right"
+                style="font-size: 21px"
+              ></i>
+              <i class="bx bx-map-pin mx-4" style="font-size: 21px"></i>
+            </div>
             <div>
               <ui-switch
                 size="small"

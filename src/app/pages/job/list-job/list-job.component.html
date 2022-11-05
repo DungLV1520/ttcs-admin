@@ -228,7 +228,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6" *ngIf="title !== 'Add User'">
+        <div class="col-6" *ngIf="title !== 'Add Job'">
           <div class="mb-3">
             <label class="control-label">Industry</label>
             <input
@@ -387,6 +387,17 @@
             style="display: flex; justify-content: space-between"
           >
             <label class="control-label"><b>Address</b></label>
+            <div
+              class="event-timeline-dot"
+              (click)="showMap()"
+              *ngIf="title !== 'Add Job'"
+            >
+              <i
+                class="bx bxs-right-arrow-circle bx-fade-right"
+                style="font-size: 21px"
+              ></i>
+              <i class="bx bx-map-pin mx-4" style="font-size: 21px"></i>
+            </div>
             <div>
               <ui-switch
                 size="small"
