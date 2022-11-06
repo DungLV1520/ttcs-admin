@@ -29,8 +29,8 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.typesubmit = false;
     this.breadCrumbItems = [
-      { label: "Profile" },
-      { label: "Setting", active: true },
+      { label: "PROFILE" },
+      { label: "SETTING", active: true },
     ];
 
     this.FormPassword = this.formBuilder.group(

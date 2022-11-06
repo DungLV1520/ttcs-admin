@@ -14,8 +14,7 @@ export class ProfileService {
     return this.http.put(`${SERVER_URL}/users/update/password`, password);
   }
 
-  resetPassword(password: any) {
-    const token = localStorage.getItem("token");
-    return this.http.post(`${SERVER_URL}/reset/${token}`, password);
+  resetPassword(password: string, resetToken: string) {
+    return this.http.post(`${SERVER_URL}/auth/reset/${resetToken}`, password);
   }
 }

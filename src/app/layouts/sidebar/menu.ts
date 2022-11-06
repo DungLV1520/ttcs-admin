@@ -88,12 +88,12 @@ export const MENU: MenuItem[] = [
   //       link: "/ui/buttons",
   //       parentId: 81,
   //     },
-  //     {
-  //       id: 84,
-  //       label: "MENUITEMS.UIELEMENTS.LIST.CARDS",
-  //       link: "/ui/cards",
-  //       parentId: 81,
-  //     },
+  // {
+  //   id: 84,
+  //   label: "MENUITEMS.UIELEMENTS.LIST.CARDS",
+  //   link: "/ui/cards",
+  //   parentId: 81,
+  // },
   //     {
   //       id: 85,
   //       label: "MENUITEMS.UIELEMENTS.LIST.CAROUSEL",

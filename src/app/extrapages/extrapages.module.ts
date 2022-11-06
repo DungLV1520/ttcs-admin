@@ -10,6 +10,7 @@ import { LockscreenComponent } from "./lockscreen/lockscreen.component";
 import { ConfirmmailComponent } from "./confirmmail/confirmmail.component";
 import { VerificationComponent } from "./verification/verification.component";
 import { ReactiveFormsModule } from "@angular/forms";
+import { UIModule } from "../shared/ui/ui.module";
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ReactiveFormsModule } from "@angular/forms";
   ],
   imports: [
     CommonModule,
+    UIModule,
     CarouselModule,
     ExtrapagesRoutingModule,
     NgOtpInputModule,

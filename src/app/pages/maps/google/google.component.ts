@@ -42,10 +42,7 @@ export class GoogleComponent implements OnInit {
       }
     });
 
-    this.breadCrumbItems = [
-      { label: "Maps" },
-      { label: "Google Maps", active: true },
-    ];
+    this.breadCrumbItems = [{ label: "MAP" }, { label: "LIST", active: true }];
 
     this._initPanorama();
     this._fetchData();

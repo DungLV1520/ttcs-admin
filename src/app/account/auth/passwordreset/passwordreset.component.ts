@@ -35,15 +35,17 @@ export class PasswordresetComponent implements OnInit {
   onSubmit() {
     this.success = "";
     this.submitted = true;
-
     if (this.resetForm.invalid) {
       return;
     } else {
+      this.loading = true;
       this.authService.forgetPass(this.resetForm.value).subscribe(
         (data) => {
           this.router.navigate(["/pages/email-verification"]);
+          this.loading = false;
         },
         (error) => {
+          this.loading = false;
           this.error = error ? error : "";
         }
       );

@@ -51,6 +51,6 @@ export class AuthService {
   }
 
   forgetPass(user: any) {
-    return this.http.post(`${SERVER_URL}/users/forgot`, user);
+    return this.http.post(`${SERVER_URL}/auth/forgot`, user);
   }
 }
