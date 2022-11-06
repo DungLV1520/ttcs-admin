@@ -152,7 +152,9 @@
             alt="Header Avatar"
           />
           <span class="d-none d-xl-inline-block ms-1">{{
-            account?.name ? account.name : "Lường Dũng"
+            account?.name.last + " " + account?.name.first
+              ? account?.name.last + " " + account?.name.first
+              : "Lường Dũng"
           }}</span>
           <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
         </button>

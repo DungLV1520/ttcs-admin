@@ -2,7 +2,6 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { SERVER_URL } from "src/app/app.constants";
-import { Customers } from "./list-user/list-user.model";
 
 @Injectable({
   providedIn: "root",
@@ -12,6 +11,12 @@ export class UserService {
 
   getUser(page?: number): Observable<HttpResponse<any>> {
     return this.http.get(`${SERVER_URL}/users?pageNumber=${page}`, {
+      observe: "response",
+    });
+  }
+
+  getDashboard(): Observable<HttpResponse<any>> {
+    return this.http.get(`${SERVER_URL}/users/dashboard`, {
       observe: "response",
     });
   }

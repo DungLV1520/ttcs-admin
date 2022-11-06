@@ -6,7 +6,7 @@ import { environment } from "../../../environments/environment";
 import { CookieService } from "ngx-cookie-service";
 import { LanguageService } from "../../core/services/language.service";
 import { TranslateService } from "@ngx-translate/core";
-import { ProfileService } from "../sidebar/sidebar.service";
+import { ProfileService } from "src/app/pages/profile/profile.service";
 
 @Component({
   selector: "app-topbar",
@@ -69,7 +69,7 @@ export class TopbarComponent implements OnInit {
 
   getProfile(): void {
     this.profileService.getProfile().subscribe((data) => {
-      this.account = data;
+      this.account = data.body.user;
     });
   }
 

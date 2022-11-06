@@ -19,12 +19,10 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err) => {
-        console.log(err);
-
         if (err.status === 401) {
           this.authService.logout();
         }
-        const error = err.error.errors.errors[0].messages[0]
+        const error = err?.error?.errors?.errors[0]?.messages[0]
           .toString()
           .toUpperCase();
         return throwError(error);

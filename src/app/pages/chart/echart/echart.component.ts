@@ -12,6 +12,8 @@ import {
   bubbleChart,
   dynamicChart,
 } from "./data";
+import { UserService } from "../../user/user.service";
+import * as moment from "moment";
 
 @Component({
   selector: "app-echart",
@@ -30,8 +32,10 @@ export class EchartComponent implements OnInit {
   gaugeChart: ChartType;
   dynamicChart: ChartType;
   breadCrumbItems: Array<{}>;
+  chartItem: any;
+  loading = true;
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     this.breadCrumbItems = [
@@ -43,8 +47,27 @@ export class EchartComponent implements OnInit {
   }
 
   private _fetchData() {
+    this.loading = true;
+    this.userService.getDashboard().subscribe(
+      (data) => {
+        this.loading = false;
+        this.chartItem = data.body.payLoad;
+        const dataTime = [];
+        const dataSeries = [];
+        this.chartItem?.clickOnJobGraph.forEach((data) => {
+          dataTime.push(moment(data.datetime).format("DD/MM/YYYY"));
+          dataSeries.push(data.count);
+        });
+        this.barChart = barChart;
+        this.barChart.xAxis[0].data = dataTime;
+        this.barChart.series[0].data = dataSeries;
+      },
+      (err) => {
+        this.loading = false;
+      }
+    );
+
     this.lineChart = lineChart;
-    this.barChart = barChart;
     this.pieChart = pieChart;
     this.customPieChart = customPieChart;
     this.gradientBarChart = gradientBarChart;

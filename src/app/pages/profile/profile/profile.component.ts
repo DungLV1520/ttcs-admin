@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
   FormPassword: FormGroup;
   FormProfile: FormGroup;
   loading: boolean = true;
+  account: any;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -48,6 +49,26 @@ export class ProfileComponent implements OnInit {
       lastName: ["", Validators.required],
       firstName: ["", Validators.required],
     });
+    this.getProfile();
+  }
+
+  getProfile(): void {
+    this.loading = true;
+    this.profileService.getProfile().subscribe(
+      (data) => {
+        this.account = data.body.user;
+        console.log(this.account);
+
+        this.FormProfile.patchValue({
+          lastName: this.account.name.last,
+          firstName: this.account.name.first,
+        });
+        this.loading = false;
+      },
+      (err) => {
+        this.loading = false;
+      }
+    );
   }
 
   get type() {
