@@ -25,6 +25,12 @@ export const MENU: MenuItem[] = [
     link: "/job/list-user",
   },
   {
+    id: 123,
+    label: "MAP",
+    icon: "bx-map",
+    link: "/maps/google",
+  },
+  {
     id: 12,
     label: "PROFILE",
     icon: "bx bx-user-circle",
@@ -60,7 +66,6 @@ export const MENU: MenuItem[] = [
   //   icon: "bx bx-right-indent",
   //   link: "/ticket/list",
   // },
-
   // {
   //   id: 80,
   //   label: "MENUITEMS.COMPONENTS.TEXT",
@@ -333,12 +338,6 @@ export const MENU: MenuItem[] = [
   //     },
   //   ],
   // },
-  {
-    id: 123,
-    label: "MAP",
-    icon: "bx-map",
-    link: "/maps/google",
-  },
   // {
   //   id: 125,
   //   label: "MENUITEMS.MULTILEVEL.TEXT",
